@@ -1,11 +1,32 @@
 public class Cube {
 
-    private char[] green;
-    private char[] blue;
-    private char[] white;
-    private char[] yellow;
-    private char[] orange;
-    private char[] red;
+    private char[] green = new char[9];
+    private char[] blue = new char[9];
+    private char[] white = new char[9];
+    private char[] yellow = new char[9];
+    private char[] orange = new char[9];
+    private char[] red = new char[9];
+
+    static public String sampleScramble = "F' R' B2 F2 D' L2 D' R2 D' F2 D' U2 B2 L' D2 L' B F' L' U2 L2";
+
+    // edges
+    public char[] UB;
+    public char[] UR = {white[1], red[1]};
+    public char[] UF = {white[1], green[1]};
+    public char[] UL = {white[1], orange[1]};
+    public char[] FR = {green[5], red[3]};
+    public char[] FL = {green[3], orange[5]};
+    public char[] BR = {blue[3], red[5]};
+    public char[] BL = {blue[5], orange[3]};
+    public char[] FD = {green[7], yellow[1]};
+    public char[] RD = {red[7], yellow[5]};
+    public char[] BD = {blue[7], yellow[7]};
+    public char[] LD = {orange[7], yellow[3]};
+
+
+    private char[][] edges = new char[12][2];
+
+
 
     enum Color {
         G, B, W, Y, O, R,
@@ -29,72 +50,98 @@ public class Cube {
         yellow = faces[3];
         orange = faces[4];
         red = faces[5];
+
+        populateEdges();
     }
 
     // all moves are assuming green front, white top orientation
-    public void move(String action) {
-        switch (action) {
-            case "U" -> doU();
-            case "U'" -> {
-                doU();
-                doU();
-                doU();
-            }
-            case "U2" -> {
-                doU();
-                doU();
-            }
-            case "F" -> doF();
-            case "F'" -> {
-                doF();
-                doF();
-                doF();
-            }
-            case "F2" -> {
-                doF();
-                doF();
-            }
-            case "R" -> doR();
-            case "R'" -> {
-                doR();
-                doR();
-                doR();
-            }
-            case "R2" -> {
-                doR();
-                doR();
-            }
-            case "L" -> doL();
-            case "L'" -> {
-                doL();
-                doL();
-                doL();
-            }
-            case "L2" -> {
-                doL();
-                doL();
-            }
-            case "B" -> doB();
-            case "B'" -> {
-                doB();
-                doB();
-                doB();
-            }
-            case "B2" -> {
-                doB();
-                doB();
-            }
-            case "D" -> doD();
-            case "D'" -> {
-                doD();
-                doD();
-                doD();
-            }
-            case "D2" -> {
-                doD();
-                doD();
+    public void move(String actions) {
+        String[] moves = actions.split("\\s+");
+        for (String move : moves) {
+            switch (move) {
+                case "U" -> doU();
+                case "U'" -> {
+                    doU();
+                    doU();
+                    doU();
+                }
+                case "U2" -> {
+                    doU();
+                    doU();
+                }
+                case "F" -> doF();
+                case "F'" -> {
+                    doF();
+                    doF();
+                    doF();
+                }
+                case "F2" -> {
+                    doF();
+                    doF();
+                }
+                case "R" -> doR();
+                case "R'" -> {
+                    doR();
+                    doR();
+                    doR();
+                }
+                case "R2" -> {
+                    doR();
+                    doR();
+                }
+                case "L" -> doL();
+                case "L'" -> {
+                    doL();
+                    doL();
+                    doL();
+                }
+                case "L2" -> {
+                    doL();
+                    doL();
+                }
+                case "B" -> doB();
+                case "B'" -> {
+                    doB();
+                    doB();
+                    doB();
+                }
+                case "B2" -> {
+                    doB();
+                    doB();
+                }
+                case "D" -> doD();
+                case "D'" -> {
+                    doD();
+                    doD();
+                    doD();
+                }
+                case "D2" -> {
+                    doD();
+                    doD();
+                }
             }
         }
+        populateEdges();
+    }
+
+    private void populateEdges() {
+        // U Layer Edges
+        UB = new char[]{white[1], blue[1]};
+        UR = new char[]{white[5], red[1]};
+        UF = new char[]{white[7], green[1]};
+        UL = new char[]{white[3], orange[1]};
+
+        // Middle Edges
+        FR = new char[]{green[5], red[3]};
+        FL = new char[]{green[3], orange[5]};
+        BR = new char[]{blue[3], red[5]};
+        BL = new char[]{blue[5], orange[3]};
+
+        // D layer Edges
+        FD = new char[]{green[7], yellow[1]};
+        RD = new char[]{red[7], yellow[5]};
+        BD = new char[]{blue[7], yellow[7]};
+        LD = new char[]{orange[7], yellow[3]};
     }
 
     public void turn(String mainFace, String[] sideFaces, int[][] changeIndices) {

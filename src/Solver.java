@@ -1,10 +1,17 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Solver {
 
     static Scanner scanner;
-    static Cube cube;
     static String divider = "------------------------------";
+
+    // search
+    static Cube cube;
+    ArrayList<Cube> frontier = new ArrayList<Cube>();
+    int fVal = 0;
+
+
 
     static char[][] solvedCube = {
             {'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G'},
@@ -22,30 +29,14 @@ public class Solver {
             scanner = new Scanner(System.in);
             String command = scanner.nextLine();
             switch (command) {
-                case "solve":
-//                    enterCubeInfo();
+                case "scramble":
                     cube = new Cube(solvedCube);
-                    cube.move("F'");
-                    cube.move("R'");
-                    cube.move("B2");
-                    cube.move("F2");
-                    cube.move("D'");
-                    cube.move("L2");
-                    cube.move("D'");
-                    cube.move("R2");
-                    cube.move("D'");
-                    cube.move("F2");
-                    cube.move("D'");
-                    cube.move("U2");
-                    cube.move("B2");
-                    cube.move("L'");
-                    cube.move("D2");
-                    cube.move("L'");
-                    cube.move("B");
-                    cube.move("F'");
-                    cube.move("L'");
-                    cube.move("U2");
-                    cube.move("L2");
+                    cube.move(Cube.sampleScramble);
+                    break;
+                case "input":
+                    enterCubeInfo();
+                case "solve":
+                    solve(cube);
                     break;
                 case "view":
                     cube.printFaces();
@@ -57,7 +48,12 @@ public class Solver {
                 default:
                     System.out.println("unrecognized command, try again");
             }
+            System.out.println(divider);
         }
+    }
+
+    static void solve(Cube cube) {
+
     }
 
     // TODO: add exception handling for invalid inputs
@@ -65,11 +61,10 @@ public class Solver {
     static void enterCubeInfo() {
         cube = new Cube();
         String[] faces = {"blue", "green", "yellow", "white", "orange", "red"};
-        for (int i = 0; i < faces.length; i++) {
-            System.out.println("Input " + faces[i] + " face:");
+        for (String face : faces) {
+            System.out.println("Input " + face + " face:");
             String input = scanner.nextLine();
-            cube.setFace(faces[i], input.toCharArray());
-//            System.out.println(divider);
+            cube.setFace(face, input.toCharArray());
         }
     }
 }
