@@ -1,38 +1,31 @@
 public class Cube {
 
-    private char[] green = new char[9];
-    private char[] blue = new char[9];
-    private char[] white = new char[9];
-    private char[] yellow = new char[9];
-    private char[] orange = new char[9];
-    private char[] red = new char[9];
-
-    static public String sampleScramble = "F' R' B2 F2 D' L2 D' R2 D' F2 D' U2 B2 L' D2 L' B F' L' U2 L2";
+    // faces
+    private char[] green;
+    private char[] blue;
+    private char[] white;
+    private char[] yellow;
+    private char[] orange;
+    private char[] red;
 
     // edges
     public char[] UB;
-    public char[] UR = {white[1], red[1]};
-    public char[] UF = {white[1], green[1]};
-    public char[] UL = {white[1], orange[1]};
-    public char[] FR = {green[5], red[3]};
-    public char[] FL = {green[3], orange[5]};
-    public char[] BR = {blue[3], red[5]};
-    public char[] BL = {blue[5], orange[3]};
-    public char[] FD = {green[7], yellow[1]};
-    public char[] RD = {red[7], yellow[5]};
-    public char[] BD = {blue[7], yellow[7]};
-    public char[] LD = {orange[7], yellow[3]};
+    public char[] UR;
+    public char[] UF;
+    public char[] UL;
+    public char[] FR;
+    public char[] FL;
+    public char[] BR;
+    public char[] BL;
+    public char[] DF;
+    public char[] DR;
+    public char[] DB;
+    public char[] DL;
 
 
-    private char[][] edges = new char[12][2];
-
-
-
-    enum Color {
-        G, B, W, Y, O, R,
-    }
-
-//    private char[][] faces = {green, blue, white, yellow, orange, red};
+    static public String sampleScramble = "F' R' B2 F2 D' L2 D' R2 D' F2 D' U2 B2 L' D2 L' B F' L' U2 L2";
+    public int nonorientedEdges;
+    public static final int NUM_EDGES = 12;
 
     public Cube() {
         this.green = null;
@@ -52,6 +45,23 @@ public class Cube {
         red = faces[5];
 
         populateEdges();
+    }
+
+    public boolean isEdgeOriented(char[] edge) {
+        if (edge[0] == 'R' || edge[0] == 'O') {
+            return false;
+        } else return edge[1] != 'W' && edge[1] != 'Y';
+    }
+
+    public void updateEdgesOrientation() {
+        int edgeCount = 0;
+        char[][] edges = {UB, UR, UF, UL, FR, FL, BR, BL, DF, DR, DB, DL};
+        for (char[] edge : edges) {
+            if (isEdgeOriented(edge)) {
+                edgeCount++;
+            }
+        }
+        nonorientedEdges = NUM_EDGES - edgeCount;
     }
 
     // all moves are assuming green front, white top orientation
@@ -122,6 +132,7 @@ public class Cube {
             }
         }
         populateEdges();
+        updateEdgesOrientation();
     }
 
     private void populateEdges() {
@@ -138,10 +149,10 @@ public class Cube {
         BL = new char[]{blue[5], orange[3]};
 
         // D layer Edges
-        FD = new char[]{green[7], yellow[1]};
-        RD = new char[]{red[7], yellow[5]};
-        BD = new char[]{blue[7], yellow[7]};
-        LD = new char[]{orange[7], yellow[3]};
+        DF = new char[]{yellow[1], green[7]};
+        DR = new char[]{yellow[5], red[7]};
+        DB = new char[]{yellow[7], blue[7]};
+        DL = new char[]{yellow[3], orange[7]};
     }
 
     public void turn(String mainFace, String[] sideFaces, int[][] changeIndices) {

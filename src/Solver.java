@@ -31,7 +31,8 @@ public class Solver {
             switch (command) {
                 case "scramble":
                     cube = new Cube(solvedCube);
-                    cube.move(Cube.sampleScramble);
+//                    cube.move(Cube.sampleScramble);
+                    cube.move("R2 L2 U2 D2 B2 F'");
                     break;
                 case "input":
                     enterCubeInfo();
@@ -40,6 +41,9 @@ public class Solver {
                     break;
                 case "view":
                     cube.printFaces();
+                    break;
+                case "oriented edges":
+                    System.out.print(cube.nonorientedEdges);
                     break;
                 case "help":
                     System.out.println("solve, quit, help");
@@ -53,6 +57,8 @@ public class Solver {
     }
 
     static void solve(Cube cube) {
+        // scrambled cube = group_0
+        // oriented edges = group_1
 
     }
 
