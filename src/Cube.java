@@ -26,6 +26,21 @@ public class Cube {
     static public String sampleScramble = "F' R' B2 F2 D' L2 D' R2 D' F2 D' U2 B2 L' D2 L' B F' L' U2 L2";
     public int nonorientedEdges;
     public static final int NUM_EDGES = 12;
+    public static final int BRANCHING_FACTOR = 12;
+
+    public Cube FCube;
+    public Cube FPrimeCube;
+    public Cube UCube;
+    public Cube UPrimeCube;
+    public Cube RCube;
+    public Cube RPrimeCube;
+    public Cube LCube;
+    public Cube LPrimeCube;
+    public Cube DCube;
+    public Cube DPrimeCube;
+    public Cube BCube;
+    public Cube BPrimeCube;
+
 
     public Cube() {
         this.green = null;
@@ -45,6 +60,18 @@ public class Cube {
         red = faces[5];
 
         populateEdges();
+//        FCube = doActions("F");
+//        FPrimeCube = doActions("F'");
+//        UCube = doActions("U");
+//        UPrimeCube = doActions("U'");
+//        RCube = doActions("R");
+//        RPrimeCube = doActions("R'");
+//        LCube = doActions("L");
+//        LPrimeCube = doActions("L'");
+//        DCube = doActions("D");
+//        DPrimeCube = doActions("D'");
+//        BCube = doActions("B");
+//        BPrimeCube = doActions("B'");
     }
 
     public boolean isEdgeOriented(char[] edge) {
@@ -53,7 +80,7 @@ public class Cube {
         } else return edge[1] != 'W' && edge[1] != 'Y';
     }
 
-    public void updateEdgesOrientation() {
+    private void updateEdgesOrientation() {
         int edgeCount = 0;
         char[][] edges = {UB, UR, UF, UL, FR, FL, BR, BL, DF, DR, DB, DL};
         for (char[] edge : edges) {
@@ -65,70 +92,28 @@ public class Cube {
     }
 
     // all moves are assuming green front, white top orientation
-    public void move(String actions) {
+    public void scramble(String actions) {
         String[] moves = actions.split("\\s+");
         for (String move : moves) {
             switch (move) {
                 case "U" -> doU();
-                case "U'" -> {
-                    doU();
-                    doU();
-                    doU();
-                }
-                case "U2" -> {
-                    doU();
-                    doU();
-                }
+                case "U'" -> doUPrime();
+                case "U2" -> doU2();
                 case "F" -> doF();
-                case "F'" -> {
-                    doF();
-                    doF();
-                    doF();
-                }
-                case "F2" -> {
-                    doF();
-                    doF();
-                }
+                case "F'" -> doFPrime();
+                case "F2" -> doF2();
                 case "R" -> doR();
-                case "R'" -> {
-                    doR();
-                    doR();
-                    doR();
-                }
-                case "R2" -> {
-                    doR();
-                    doR();
-                }
+                case "R'" -> doRPrime();
+                case "R2" -> doR2();
                 case "L" -> doL();
-                case "L'" -> {
-                    doL();
-                    doL();
-                    doL();
-                }
-                case "L2" -> {
-                    doL();
-                    doL();
-                }
+                case "L'" -> doLPrime();
+                case "L2" -> doL2();
                 case "B" -> doB();
-                case "B'" -> {
-                    doB();
-                    doB();
-                    doB();
-                }
-                case "B2" -> {
-                    doB();
-                    doB();
-                }
+                case "B'" -> doBPrime();
+                case "B2" -> doB2();
                 case "D" -> doD();
-                case "D'" -> {
-                    doD();
-                    doD();
-                    doD();
-                }
-                case "D2" -> {
-                    doD();
-                    doD();
-                }
+                case "D'" -> doDPrime();
+                case "D2" -> doD2();
             }
         }
         populateEdges();
@@ -196,40 +181,89 @@ public class Cube {
         int[][] changeIndices = {{0, 1, 2}, {0, 1, 2}, {0, 1, 2}, {0, 1, 2}};
         turn(mainFace, sideFaces, changeIndices);
     }
-
+    public void doU2() {
+        doU();
+        doU();
+    }
+    public void doUPrime() {
+        doU();
+        doU();
+        doU();
+    }
     public void doF() {
         String mainFace = "green";
         String[] sideFaces = {"yellow", "red", "white", "orange"};
         int[][] changeIndices = {{0, 1, 2}, {6, 3, 0}, {8, 7, 6}, {2, 5, 8}};
         turn(mainFace, sideFaces, changeIndices);
     }
-
+    public void doFPrime() {
+        doF();
+        doF();
+        doF();
+    }
+    public void doF2() {
+        doF();
+        doF();
+    }
     public void doR() {
         String mainFace = "red";
         String[] sideFaces = {"green", "yellow", "blue", "white"};
         int[][] changeIndices = {{2, 5, 8}, {2, 5, 8}, {6, 3, 0}, {2, 5, 8}};
         turn(mainFace, sideFaces, changeIndices);
     }
-
+    public void doRPrime() {
+        doR();
+        doR();
+        doR();
+    }
+    public void doR2() {
+        doR();
+        doR();
+    }
     public void doL() {
         String mainFace = "orange";
         String[] sideFaces = {"green", "white", "blue", "yellow"};
         int[][] changeIndices = {{0, 3, 6}, {0, 3, 6}, {8, 5, 2}, {0, 3, 6}};
         turn(mainFace, sideFaces, changeIndices);
     }
-
+    public void doL2() {
+        doL();
+        doL();
+    }
+    public void doLPrime() {
+        doL();
+        doL();
+        doL();
+    }
     public void doB() {
         String mainFace = "blue";
         String[] sideFaces = {"white", "red", "yellow", "orange"};
         int[][] changeIndices = {{0, 1, 2}, {2, 5, 8}, {8, 7, 6}, {6, 3, 0}};
         turn(mainFace, sideFaces, changeIndices);
     }
-
+    public void doB2() {
+        doB();
+        doB();
+    }
+    public void doBPrime() {
+        doB();
+        doB();
+        doB();
+    }
     public void doD() {
         String mainFace = "yellow";
         String[] sideFaces = {"green", "orange", "blue", "red"};
         int[][] changeIndices = {{6, 7, 8}, {6, 7, 8}, {6, 7, 8}, {6, 7, 8}};
         turn(mainFace, sideFaces, changeIndices);
+    }
+    public void doD2() {
+        doD();
+        doD();
+    }
+    public void doDPrime() {
+        doD();
+        doD();
+        doD();
     }
 
     public void setFace(String face, char[] value) {

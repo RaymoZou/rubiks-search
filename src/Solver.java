@@ -31,8 +31,8 @@ public class Solver {
             switch (command) {
                 case "scramble":
                     cube = new Cube(solvedCube);
-//                    cube.move(Cube.sampleScramble);
-                    cube.move("R2 L2 U2 D2 B2 F'");
+                    cube.scramble(Cube.sampleScramble);
+//                    cube.move("R2 L2 U2 D2 B2 F'");
                     break;
                 case "input":
                     enterCubeInfo();
