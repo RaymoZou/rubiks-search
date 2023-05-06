@@ -1,5 +1,7 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class Solver {
 
@@ -8,8 +10,10 @@ public class Solver {
 
     // search
     static Cube cube;
-    ArrayList<Cube> frontier = new ArrayList<Cube>();
+
+    static float minPruned = Integer.MAX_VALUE;
     int fVal = 0;
+    int SEARCH_THRESHOLD = 0;
 
 
 
@@ -31,6 +35,7 @@ public class Solver {
             switch (command) {
                 case "scramble":
                     cube = new Cube(solvedCube);
+//                    cube.scramble("U L'");
                     cube.scramble(Cube.sampleScramble);
 //                    cube.move("R2 L2 U2 D2 B2 F'");
                     break;
@@ -56,11 +61,39 @@ public class Solver {
         }
     }
 
-    static void solve(Cube cube) {
-        // scrambled cube = group_0
-        // oriented edges = group_1
-
+    static void solve(Cube root) {
+        Cube result = null;
+        float threshold = root.getFVal();
+        while (result == null) {
+            result = IDAStarSearch(root, threshold);
+            threshold = minPruned; // repeat IDA with new threshold
+            minPruned = Integer.MAX_VALUE; // reset the minPruned value
+        }
+        int x = 5;
     }
+
+    static Cube IDAStarSearch(Cube node, float threshold) {
+        if (node.nonorientedEdges == 0) return node;
+        if ((node.getFVal() <= threshold)) {
+            // expand
+            node.generateChildren();
+            Cube[] children = {
+                    node.UCube, node.UPrimeCube, node.FCube,
+                    node.FPrimeCube, node.RCube, node.RPrimeCube,
+                    node.DCube, node.DPrimeCube, node.LCube,
+                    node.LPrimeCube, node.BCube, node.BPrimeCube,
+            };
+            for (Cube c : children) {
+                Cube result = IDAStarSearch(c, threshold);
+                if (result != null) return result;
+            }
+        } else {
+            Cube newCube = node;
+            if (node.getFVal() <= minPruned) minPruned = node.getFVal();
+        }
+        return null;
+    }
+
 
     // TODO: add exception handling for invalid inputs
     // inputs must consist of 9 char strings

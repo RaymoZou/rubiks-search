@@ -24,23 +24,24 @@ public class Cube {
 
 
     static public String sampleScramble = "F' R' B2 F2 D' L2 D' R2 D' F2 D' U2 B2 L' D2 L' B F' L' U2 L2";
-    public int nonorientedEdges;
+    public float nonorientedEdges;
     public static final int NUM_EDGES = 12;
     public static final int BRANCHING_FACTOR = 12;
 
-    public Cube FCube;
-    public Cube FPrimeCube;
-    public Cube UCube;
-    public Cube UPrimeCube;
-    public Cube RCube;
-    public Cube RPrimeCube;
-    public Cube LCube;
-    public Cube LPrimeCube;
-    public Cube DCube;
-    public Cube DPrimeCube;
-    public Cube BCube;
-    public Cube BPrimeCube;
+    public int depthLevel = 0;
 
+    public Cube UCube = null;
+    public Cube UPrimeCube = null;
+    public Cube FCube = null;
+    public Cube FPrimeCube = null;
+    public Cube RCube = null;
+    public Cube RPrimeCube = null;
+    public Cube LCube = null;
+    public Cube LPrimeCube = null;
+    public Cube DCube = null;
+    public Cube DPrimeCube = null;
+    public Cube BCube = null;
+    public Cube BPrimeCube = null;
 
     public Cube() {
         this.green = null;
@@ -52,32 +53,63 @@ public class Cube {
     }
 
     public Cube(char[][] faces) {
-        green = faces[0];
-        blue = faces[1];
-        white = faces[2];
-        yellow = faces[3];
-        orange = faces[4];
-        red = faces[5];
+        char[] greenCopy = new char[9];
+        char[] blueCopy = new char[9];
+        char[] whiteCopy = new char[9];
+        char[] yellowCopy = new char[9];
+        char[] orangeCopy = new char[9];
+        char[] redCopy = new char[9];
+        System.arraycopy(faces[0], 0, greenCopy, 0, faces[0].length);
+        System.arraycopy(faces[1], 0, blueCopy, 0, faces[1].length);
+        System.arraycopy(faces[2], 0, whiteCopy, 0, faces[2].length);
+        System.arraycopy(faces[3], 0, yellowCopy, 0, faces[3].length);
+        System.arraycopy(faces[4], 0, orangeCopy, 0, faces[4].length);
+        System.arraycopy(faces[5], 0, redCopy, 0, faces[5].length);
+        green = greenCopy;
+        blue = blueCopy;
+        white = whiteCopy;
+        yellow = yellowCopy;
+        orange = orangeCopy;
+        red = redCopy;
 
         populateEdges();
-//        FCube = doActions("F");
-//        FPrimeCube = doActions("F'");
-//        UCube = doActions("U");
-//        UPrimeCube = doActions("U'");
-//        RCube = doActions("R");
-//        RPrimeCube = doActions("R'");
-//        LCube = doActions("L");
-//        LPrimeCube = doActions("L'");
-//        DCube = doActions("D");
-//        DPrimeCube = doActions("D'");
-//        BCube = doActions("B");
-//        BPrimeCube = doActions("B'");
+        updateEdgesOrientation();
+    }
+
+    public Cube(char[][] faces, int depthLevel) {
+        char[] greenCopy = new char[9];
+        char[] blueCopy = new char[9];
+        char[] whiteCopy = new char[9];
+        char[] yellowCopy = new char[9];
+        char[] orangeCopy = new char[9];
+        char[] redCopy = new char[9];
+        System.arraycopy(faces[0], 0, greenCopy, 0, faces[0].length);
+        System.arraycopy(faces[1], 0, blueCopy, 0, faces[1].length);
+        System.arraycopy(faces[2], 0, whiteCopy, 0, faces[2].length);
+        System.arraycopy(faces[3], 0, yellowCopy, 0, faces[3].length);
+        System.arraycopy(faces[4], 0, orangeCopy, 0, faces[4].length);
+        System.arraycopy(faces[5], 0, redCopy, 0, faces[5].length);
+        green = greenCopy;
+        blue = blueCopy;
+        white = whiteCopy;
+        yellow = yellowCopy;
+        orange = orangeCopy;
+        red = redCopy;
+
+        populateEdges();
+        updateEdgesOrientation();
+        this.depthLevel = depthLevel;
     }
 
     public boolean isEdgeOriented(char[] edge) {
         if (edge[0] == 'R' || edge[0] == 'O') {
             return false;
         } else return edge[1] != 'W' && edge[1] != 'Y';
+    }
+
+    // 4 is the max number of edges that can become oriented with one move
+    public float getEdgeHeuristic() {
+        return nonorientedEdges / 4;
     }
 
     private void updateEdgesOrientation() {
@@ -173,6 +205,41 @@ public class Cube {
         for (int i = 0; i < sideFaceArrays.length; i++) {
             setFace(sideFaces[i], sideFaceArrays[i]);
         }
+        populateEdges();
+        updateEdgesOrientation();
+    }
+
+    public float getFVal() {
+        return depthLevel + getEdgeHeuristic();
+    }
+
+    // getCubes
+    public void generateChildren() {
+        UCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
+        UPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
+        FCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
+        FPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
+        BCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
+        BPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
+        RCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
+        RPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
+        LCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
+        LPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
+        DCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
+        DPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
+
+        UCube.doU();
+        UPrimeCube.doUPrime();
+        FCube.doF();
+        FPrimeCube.doFPrime();
+        BCube.doB();
+        BPrimeCube.doBPrime();
+        RCube.doR();
+        RPrimeCube.doRPrime();
+        LCube.doL();
+        LPrimeCube.doLPrime();
+        DCube.doD();
+        DPrimeCube.doDPrime();
     }
 
     public void doU() {
@@ -181,85 +248,102 @@ public class Cube {
         int[][] changeIndices = {{0, 1, 2}, {0, 1, 2}, {0, 1, 2}, {0, 1, 2}};
         turn(mainFace, sideFaces, changeIndices);
     }
+
     public void doU2() {
         doU();
         doU();
     }
+
     public void doUPrime() {
         doU();
         doU();
         doU();
     }
+
     public void doF() {
         String mainFace = "green";
         String[] sideFaces = {"yellow", "red", "white", "orange"};
         int[][] changeIndices = {{0, 1, 2}, {6, 3, 0}, {8, 7, 6}, {2, 5, 8}};
         turn(mainFace, sideFaces, changeIndices);
     }
+
     public void doFPrime() {
         doF();
         doF();
         doF();
     }
+
     public void doF2() {
         doF();
         doF();
     }
+
     public void doR() {
         String mainFace = "red";
         String[] sideFaces = {"green", "yellow", "blue", "white"};
         int[][] changeIndices = {{2, 5, 8}, {2, 5, 8}, {6, 3, 0}, {2, 5, 8}};
         turn(mainFace, sideFaces, changeIndices);
     }
+
     public void doRPrime() {
         doR();
         doR();
         doR();
     }
+
     public void doR2() {
         doR();
         doR();
     }
+
     public void doL() {
         String mainFace = "orange";
         String[] sideFaces = {"green", "white", "blue", "yellow"};
         int[][] changeIndices = {{0, 3, 6}, {0, 3, 6}, {8, 5, 2}, {0, 3, 6}};
         turn(mainFace, sideFaces, changeIndices);
     }
+
     public void doL2() {
         doL();
         doL();
     }
+
     public void doLPrime() {
         doL();
         doL();
         doL();
     }
+
     public void doB() {
         String mainFace = "blue";
         String[] sideFaces = {"white", "red", "yellow", "orange"};
         int[][] changeIndices = {{0, 1, 2}, {2, 5, 8}, {8, 7, 6}, {6, 3, 0}};
         turn(mainFace, sideFaces, changeIndices);
     }
+
     public void doB2() {
         doB();
         doB();
     }
+
     public void doBPrime() {
         doB();
         doB();
         doB();
     }
+
     public void doD() {
         String mainFace = "yellow";
         String[] sideFaces = {"green", "orange", "blue", "red"};
         int[][] changeIndices = {{6, 7, 8}, {6, 7, 8}, {6, 7, 8}, {6, 7, 8}};
         turn(mainFace, sideFaces, changeIndices);
     }
+
     public void doD2() {
         doD();
         doD();
     }
+
     public void doDPrime() {
         doD();
         doD();

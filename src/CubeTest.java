@@ -1,5 +1,7 @@
 import org.junit.Test;
+
 import static org.junit.Assert.*;
+import org.junit.Before;
 
 public class CubeTest {
 
@@ -12,7 +14,17 @@ public class CubeTest {
 
 
     public String sampleScramble = "F' R' B2 F2 D' L2 D' R2 D' F2 D' U2 B2 L' D2 L' B F' L' U2 L2";
-    static char[][] solvedCube = {
+    private final float floatComparisonDelta = 0.001F;
+
+    static final char[][] sampleState = {
+            {Y, W, G, O, G, R, W, G, G}, // green
+            {B, Y, R, O, B, Y, Y, B, O}, // blue
+            {W, R, Y, B, W, B, R, R, W}, // white
+            {O, Y, O, R, Y, G, G, O, R}, // yellow
+            {B, W, G, O, O, G, W, G, B}, // orange
+            {R, Y, O, B, R, W, Y, W, B}, // red
+    };
+    static final char[][] solvedCube = {
             {'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G'},
             {'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B'},
             {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
@@ -20,6 +32,11 @@ public class CubeTest {
             {'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'},
             {'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R'}
     };
+
+    @Before
+    public void setUp() {
+        Cube cube = new Cube(solvedCube);
+    }
 
     @Test
     public void testConstructor() {
@@ -36,19 +53,35 @@ public class CubeTest {
     public void testMultipleMoves() {
         Cube cube = new Cube(solvedCube);
         cube.scramble(sampleScramble);
-        assertArrayEquals(new char[]{Y, W, G, O, G, R, W, G, G}, cube.getFace("green"));
-        assertArrayEquals(new char[]{B, Y, R, O, B, Y, Y, B, O}, cube.getFace("blue"));
-        assertArrayEquals(new char[]{W, R, Y, B, W, B, R, R, W}, cube.getFace("white"));
-        assertArrayEquals(new char[]{O, Y, O, R, Y, G, G, O, R}, cube.getFace("yellow"));
-        assertArrayEquals(new char[]{R, Y, O, B, R, W, Y, W, B}, cube.getFace("red"));
-        assertArrayEquals(new char[]{B, W, G, O, O, G, W, G, B}, cube.getFace("orange"));
+        assertArrayEquals(sampleState[0], cube.getFace("green"));
+        assertArrayEquals(sampleState[1], cube.getFace("blue"));
+        assertArrayEquals(sampleState[2], cube.getFace("white"));
+        assertArrayEquals(sampleState[3], cube.getFace("yellow"));
+        assertArrayEquals(sampleState[4], cube.getFace("orange"));
+        assertArrayEquals(sampleState[5], cube.getFace("red"));
     }
 
-//    @Test
-//    public void testChildren() {
-//        Cube cube = new Cube(solvedCube);
-//        cube.scramble(sampleScramble);
-//    }
+    @Test
+    public void testEdgeOrientation() {
+        Cube cube = new Cube(solvedCube);
+        cube.generateChildren();
+        assertEquals(0, cube.getEdgeHeuristic(), floatComparisonDelta);
+        assertEquals(0, cube.RCube.getEdgeHeuristic(), floatComparisonDelta);
+        assertEquals(1, cube.FCube.getEdgeHeuristic(), floatComparisonDelta);
+        assertEquals(1, cube.FPrimeCube.getEdgeHeuristic(), floatComparisonDelta);
+        assertEquals(1, cube.BCube.getEdgeHeuristic(), floatComparisonDelta);
+        assertEquals(1, cube.BPrimeCube.getEdgeHeuristic(), floatComparisonDelta);
+    }
+
+    @Test
+    public void testChildren() {
+        Cube cube = new Cube(sampleState);
+        cube.generateChildren();
+        assertArrayEquals(new char[]{R, Y, O, O, G, R, W, G, G,}, cube.UCube.getFace("green"));
+        assertEquals(1, cube.RCube.depthLevel);
+        cube.RCube.generateChildren();
+        assertEquals(2, cube.RCube.LCube.depthLevel);
+    }
 
 
 }
