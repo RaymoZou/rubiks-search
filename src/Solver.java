@@ -35,9 +35,8 @@ public class Solver {
             switch (command) {
                 case "scramble":
                     cube = new Cube(solvedCube);
-//                    cube.scramble("U L'");
-                    cube.scramble(Cube.sampleScramble);
-//                    cube.move("R2 L2 U2 D2 B2 F'");
+                    cube.scramble("B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2 R2");
+//                    cube.scramble(Cube.sampleScramble);
                     break;
                 case "input":
                     enterCubeInfo();
@@ -62,10 +61,11 @@ public class Solver {
     }
 
     static void solve(Cube root) {
+        Cube cube0 = root;
         Cube result = null;
-        float threshold = root.getFVal();
+        float threshold = cube0.getFVal();
         while (result == null) {
-            result = IDAStarSearch(root, threshold);
+            result = IDAStarSearch(cube0, threshold);
             threshold = minPruned; // repeat IDA with new threshold
             minPruned = Integer.MAX_VALUE; // reset the minPruned value
         }
@@ -88,7 +88,6 @@ public class Solver {
                 if (result != null) return result;
             }
         } else {
-            Cube newCube = node;
             if (node.getFVal() <= minPruned) minPruned = node.getFVal();
         }
         return null;

@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Cube {
 
     // faces
@@ -23,10 +25,11 @@ public class Cube {
     public char[] DL;
 
 
-    static public String sampleScramble = "F' R' B2 F2 D' L2 D' R2 D' F2 D' U2 B2 L' D2 L' B F' L' U2 L2";
+    static public String sampleScramble = "B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2 R2";
     public float nonorientedEdges;
     public static final int NUM_EDGES = 12;
-    public static final int BRANCHING_FACTOR = 12;
+
+    public String currPath = "";
 
     public int depthLevel = 0;
 
@@ -53,62 +56,44 @@ public class Cube {
     }
 
     public Cube(char[][] faces) {
-        char[] greenCopy = new char[9];
-        char[] blueCopy = new char[9];
-        char[] whiteCopy = new char[9];
-        char[] yellowCopy = new char[9];
-        char[] orangeCopy = new char[9];
-        char[] redCopy = new char[9];
-        System.arraycopy(faces[0], 0, greenCopy, 0, faces[0].length);
-        System.arraycopy(faces[1], 0, blueCopy, 0, faces[1].length);
-        System.arraycopy(faces[2], 0, whiteCopy, 0, faces[2].length);
-        System.arraycopy(faces[3], 0, yellowCopy, 0, faces[3].length);
-        System.arraycopy(faces[4], 0, orangeCopy, 0, faces[4].length);
-        System.arraycopy(faces[5], 0, redCopy, 0, faces[5].length);
-        green = greenCopy;
-        blue = blueCopy;
-        white = whiteCopy;
-        yellow = yellowCopy;
-        orange = orangeCopy;
-        red = redCopy;
-
+        green = Arrays.copyOf(faces[0], faces[0].length);
+        blue = Arrays.copyOf(faces[1], faces[1].length);
+        white = Arrays.copyOf(faces[2], faces[2].length);
+        yellow = Arrays.copyOf(faces[3], faces[3].length);
+        orange = Arrays.copyOf(faces[4], faces[4].length);
+        red = Arrays.copyOf(faces[5], faces[5].length);
         populateEdges();
         updateEdgesOrientation();
     }
 
-    public Cube(char[][] faces, int depthLevel) {
-        char[] greenCopy = new char[9];
-        char[] blueCopy = new char[9];
-        char[] whiteCopy = new char[9];
-        char[] yellowCopy = new char[9];
-        char[] orangeCopy = new char[9];
-        char[] redCopy = new char[9];
-        System.arraycopy(faces[0], 0, greenCopy, 0, faces[0].length);
-        System.arraycopy(faces[1], 0, blueCopy, 0, faces[1].length);
-        System.arraycopy(faces[2], 0, whiteCopy, 0, faces[2].length);
-        System.arraycopy(faces[3], 0, yellowCopy, 0, faces[3].length);
-        System.arraycopy(faces[4], 0, orangeCopy, 0, faces[4].length);
-        System.arraycopy(faces[5], 0, redCopy, 0, faces[5].length);
-        green = greenCopy;
-        blue = blueCopy;
-        white = whiteCopy;
-        yellow = yellowCopy;
-        orange = orangeCopy;
-        red = redCopy;
-
+    public Cube(char[][] faces, int depthLevel, String path) {
+        green = Arrays.copyOf(faces[0], faces[0].length);
+        blue = Arrays.copyOf(faces[1], faces[1].length);
+        white = Arrays.copyOf(faces[2], faces[2].length);
+        yellow = Arrays.copyOf(faces[3], faces[3].length);
+        orange = Arrays.copyOf(faces[4], faces[4].length);
+        red = Arrays.copyOf(faces[5], faces[5].length);
         populateEdges();
         updateEdgesOrientation();
+
         this.depthLevel = depthLevel;
+        this.currPath = path;
     }
 
+    // group 0 -> group 1
     public boolean isEdgeOriented(char[] edge) {
         if (edge[0] == 'R' || edge[0] == 'O') {
             return false;
         } else return edge[1] != 'W' && edge[1] != 'Y';
     }
 
+    // group 1 -> group 2
+    public boolean isEdgeCrossed(char[] edge) {
+        return false;
+    }
+
     // 4 is the max number of edges that can become oriented with one move
-    public float getEdgeHeuristic() {
+    public float getEOHeuristic() {
         return nonorientedEdges / 4;
     }
 
@@ -210,23 +195,23 @@ public class Cube {
     }
 
     public float getFVal() {
-        return depthLevel + getEdgeHeuristic();
+        return depthLevel + getEOHeuristic();
     }
 
     // getCubes
     public void generateChildren() {
-        UCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
-        UPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
-        FCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
-        FPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
-        BCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
-        BPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
-        RCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
-        RPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
-        LCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
-        LPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
-        DCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
-        DPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1);
+        UCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " U");
+        UPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " U'");
+        FCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " F");
+        FPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "F'");
+        BCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " B");
+        BPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " B'");
+        RCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " R");
+        RPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " R'");
+        LCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " L");
+        LPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " L'");
+        DCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " D");
+        DPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " D'");
 
         UCube.doU();
         UPrimeCube.doUPrime();
