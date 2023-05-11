@@ -65,12 +65,12 @@ public class CubeTest {
     public void testEdgeOrientation() {
         Cube cube = new Cube(solvedCube);
         cube.generateChildren();
-        assertEquals(0, cube.getEOHeuristic(), floatComparisonDelta);
-        assertEquals(0, cube.RCube.getEOHeuristic(), floatComparisonDelta);
-        assertEquals(1, cube.FCube.getEOHeuristic(), floatComparisonDelta);
-        assertEquals(1, cube.FPrimeCube.getEOHeuristic(), floatComparisonDelta);
-        assertEquals(1, cube.BCube.getEOHeuristic(), floatComparisonDelta);
-        assertEquals(1, cube.BPrimeCube.getEOHeuristic(), floatComparisonDelta);
+        assertEquals(0, cube.getGroup0Heuristic(), floatComparisonDelta);
+        assertEquals(0, cube.RCube.getGroup0Heuristic(), floatComparisonDelta);
+        assertEquals(1, cube.FCube.getGroup0Heuristic(), floatComparisonDelta);
+        assertEquals(1, cube.FPrimeCube.getGroup0Heuristic(), floatComparisonDelta);
+        assertEquals(1, cube.BCube.getGroup0Heuristic(), floatComparisonDelta);
+        assertEquals(1, cube.BPrimeCube.getGroup0Heuristic(), floatComparisonDelta);
     }
 
     @Test
@@ -82,6 +82,4 @@ public class CubeTest {
         cube.RCube.generateChildren();
         assertEquals(2, cube.RCube.LCube.depthLevel);
     }
-
-
 }

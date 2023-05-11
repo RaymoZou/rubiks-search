@@ -24,9 +24,6 @@ public class Cube {
     public char[] DB;
     public char[] DL;
 
-
-    static public String sampleScramble = "B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2 R2";
-    public float nonorientedEdges;
     public static final int NUM_EDGES = 12;
 
     public String currPath = "";
@@ -63,7 +60,6 @@ public class Cube {
         orange = Arrays.copyOf(faces[4], faces[4].length);
         red = Arrays.copyOf(faces[5], faces[5].length);
         populateEdges();
-        updateEdgesOrientation();
     }
 
     public Cube(char[][] faces, int depthLevel, String path) {
@@ -74,10 +70,13 @@ public class Cube {
         orange = Arrays.copyOf(faces[4], faces[4].length);
         red = Arrays.copyOf(faces[5], faces[5].length);
         populateEdges();
-        updateEdgesOrientation();
 
         this.depthLevel = depthLevel;
         this.currPath = path;
+    }
+
+    public boolean isGroup0Goal() {
+        return getNonOrientatedEdges() == 0;
     }
 
     // group 0 -> group 1
@@ -87,17 +86,12 @@ public class Cube {
         } else return edge[1] != 'W' && edge[1] != 'Y';
     }
 
-    // group 1 -> group 2
-    public boolean isEdgeCrossed(char[] edge) {
-        return false;
-    }
-
     // 4 is the max number of edges that can become oriented with one move
-    public float getEOHeuristic() {
-        return nonorientedEdges / 4;
+    public float getGroup0Heuristic() {
+        return getNonOrientatedEdges() / 4;
     }
 
-    private void updateEdgesOrientation() {
+    public float getNonOrientatedEdges() {
         int edgeCount = 0;
         char[][] edges = {UB, UR, UF, UL, FR, FL, BR, BL, DF, DR, DB, DL};
         for (char[] edge : edges) {
@@ -105,7 +99,7 @@ public class Cube {
                 edgeCount++;
             }
         }
-        nonorientedEdges = NUM_EDGES - edgeCount;
+        return NUM_EDGES - edgeCount;
     }
 
     // all moves are assuming green front, white top orientation
@@ -134,7 +128,6 @@ public class Cube {
             }
         }
         populateEdges();
-        updateEdgesOrientation();
     }
 
     private void populateEdges() {
@@ -191,27 +184,26 @@ public class Cube {
             setFace(sideFaces[i], sideFaceArrays[i]);
         }
         populateEdges();
-        updateEdgesOrientation();
     }
 
-    public float getFVal() {
-        return depthLevel + getEOHeuristic();
+    public float getGroup0FVal() {
+        return depthLevel + getGroup0Heuristic();
     }
 
     // getCubes
     public void generateChildren() {
-        UCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " U");
-        UPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " U'");
-        FCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " F");
-        FPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "F'");
-        BCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " B");
-        BPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " B'");
-        RCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " R");
-        RPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " R'");
-        LCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " L");
-        LPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " L'");
-        DCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " D");
-        DPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + " D'");
+        UCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "U ");
+        UPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "U' ");
+        FCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "F ");
+        FPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "F' ");
+        BCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "B ");
+        BPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "B' ");
+        RCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "R ");
+        RPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "R' ");
+        LCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "L ");
+        LPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "L' ");
+        DCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "D ");
+        DPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "D' ");
 
         UCube.doU();
         UPrimeCube.doUPrime();

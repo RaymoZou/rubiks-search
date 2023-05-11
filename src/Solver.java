@@ -1,7 +1,4 @@
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Stack;
 
 public class Solver {
 
@@ -47,7 +44,7 @@ public class Solver {
                     cube.printFaces();
                     break;
                 case "oriented edges":
-                    System.out.print(cube.nonorientedEdges);
+                    System.out.print(cube.getNonOrientatedEdges());
                     break;
                 case "help":
                     System.out.println("solve, quit, help");
@@ -61,20 +58,21 @@ public class Solver {
     }
 
     static void solve(Cube root) {
-        Cube cube0 = root;
         Cube result = null;
-        float threshold = cube0.getFVal();
+        float threshold = root.getGroup0FVal();
         while (result == null) {
-            result = IDAStarSearch(cube0, threshold);
+            result = IdaStarSearch_Group0(root, threshold);
             threshold = minPruned; // repeat IDA with new threshold
             minPruned = Integer.MAX_VALUE; // reset the minPruned value
         }
-        int x = 5;
+        Cube cube1 = result;
+        System.out.println(cube1.currPath);
     }
 
-    static Cube IDAStarSearch(Cube node, float threshold) {
-        if (node.nonorientedEdges == 0) return node;
-        if ((node.getFVal() <= threshold)) {
+    // to orientate all edges
+    static Cube IdaStarSearch_Group0(Cube node, float threshold) {
+        if (node.isGroup0Goal()) return node;
+        if ((node.getGroup0FVal() <= threshold)) {
             // expand
             node.generateChildren();
             Cube[] children = {
@@ -84,12 +82,17 @@ public class Solver {
                     node.LPrimeCube, node.BCube, node.BPrimeCube,
             };
             for (Cube c : children) {
-                Cube result = IDAStarSearch(c, threshold);
+                Cube result = IdaStarSearch_Group0(c, threshold);
                 if (result != null) return result;
             }
         } else {
-            if (node.getFVal() <= minPruned) minPruned = node.getFVal();
+            if (node.getGroup0FVal() <= minPruned) minPruned = node.getGroup0FVal();
         }
+        return null;
+    }
+
+    // to solve opposite cross edges
+    static Cube IDAStarSearch_Group1(Cube node, float threshold) {
         return null;
     }
 
