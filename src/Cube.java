@@ -1,7 +1,6 @@
 import java.util.Arrays;
 
 public class Cube {
-
     // faces
     private char[] green;
     private char[] blue;
@@ -75,8 +74,29 @@ public class Cube {
         this.currPath = path;
     }
 
+    public float getGroup0FVal() {
+        return depthLevel + getGroup0Heuristic();
+    }
+
+    public float getGroup1FVal() {
+        return depthLevel + getGroup1Heuristic();
+    }
+
     public boolean isGroup0Goal() {
         return getNonOrientatedEdges() == 0;
+    }
+
+    public boolean isGroup1Goal() {
+        return getNonCrossedEdges() == 0;
+    }
+
+    // 4 is the max number of edges that can become oriented with one move
+    public float getGroup0Heuristic() {
+        return getNonOrientatedEdges() / 4;
+    }
+
+    public float getGroup1Heuristic() {
+        return getNonCrossedEdges() / 2;
     }
 
     // group 0 -> group 1
@@ -86,11 +106,7 @@ public class Cube {
         } else return edge[1] != 'W' && edge[1] != 'Y';
     }
 
-    // 4 is the max number of edges that can become oriented with one move
-    public float getGroup0Heuristic() {
-        return getNonOrientatedEdges() / 4;
-    }
-
+    // group 0
     public float getNonOrientatedEdges() {
         int edgeCount = 0;
         char[][] edges = {UB, UR, UF, UL, FR, FL, BR, BL, DF, DR, DB, DL};
@@ -100,6 +116,16 @@ public class Cube {
             }
         }
         return NUM_EDGES - edgeCount;
+    }
+
+    // group 1
+    public float getNonCrossedEdges() {
+        int edgeCount = 0;
+        char[][] edges = {UB, UR, UF, UL, DF, DR, DB, DL};
+        for (char[] edge : edges) {
+            if (edge[0] == 'Y' || edge[0] == 'W') edgeCount++;
+        }
+        return 8 - edgeCount;
     }
 
     // all moves are assuming green front, white top orientation
@@ -184,10 +210,6 @@ public class Cube {
             setFace(sideFaces[i], sideFaceArrays[i]);
         }
         populateEdges();
-    }
-
-    public float getGroup0FVal() {
-        return depthLevel + getGroup0Heuristic();
     }
 
     // getCubes

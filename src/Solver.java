@@ -13,7 +13,6 @@ public class Solver {
     int SEARCH_THRESHOLD = 0;
 
 
-
     static char[][] solvedCube = {
             {'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G'},
             {'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B'},
@@ -32,8 +31,8 @@ public class Solver {
             switch (command) {
                 case "scramble":
                     cube = new Cube(solvedCube);
-                    cube.scramble("B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2 R2");
-//                    cube.scramble(Cube.sampleScramble);
+//                    cube.scramble("B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2 R2");
+                    cube.scramble("U2 L2 U' B U2 B2 L' D' R U2 B2 D R2 U2 L2 D' F2 R2 L2 B2 L2");
                     break;
                 case "input":
                     enterCubeInfo();
@@ -59,11 +58,25 @@ public class Solver {
 
     static void solve(Cube root) {
         Cube result = null;
-        float threshold = root.getGroup0FVal();
+        float group0_threshold = root.getGroup0FVal();
         while (result == null) {
-            result = IdaStarSearch_Group0(root, threshold);
-            threshold = minPruned; // repeat IDA with new threshold
+            result = IdaStarSearch_Group0(root, group0_threshold);
+            group0_threshold = minPruned; // repeat IDA with new threshold
             minPruned = Integer.MAX_VALUE; // reset the minPruned value
+        }
+        Cube cube0 = result;
+        System.out.println(cube0.currPath);
+
+        // reset depth of cube0
+        cube0.depthLevel = 0;
+        cube0.currPath = "";
+
+        result = null;
+        float group1_threshold = cube0.getGroup1FVal();
+        while (result == null) {
+            result = IDAStarSearch_Group1(cube0, group1_threshold);
+            group1_threshold = minPruned;
+            minPruned = Integer.MAX_VALUE;
         }
         Cube cube1 = result;
         System.out.println(cube1.currPath);
@@ -93,6 +106,21 @@ public class Solver {
 
     // to solve opposite cross edges
     static Cube IDAStarSearch_Group1(Cube node, float threshold) {
+        if (node.isGroup1Goal()) return node;
+        if ((node.getGroup1FVal() <= threshold)) {
+            node.generateChildren();
+            Cube[] children = {
+                    node.UCube, node.UPrimeCube, node.RCube,
+                    node.RPrimeCube, node.DCube, node.DPrimeCube,
+                    node.LCube, node.LPrimeCube,
+            };
+            for (Cube c : children) {
+                Cube result = IDAStarSearch_Group1(c, threshold);
+                if (result != null) return result;
+            }
+        } else {
+            if (node.getGroup1FVal() <= minPruned) minPruned = node.getGroup1FVal();
+        }
         return null;
     }
 

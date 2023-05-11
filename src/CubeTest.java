@@ -74,6 +74,18 @@ public class CubeTest {
     }
 
     @Test
+    public void testEdgeCross() {
+        Cube cube = new Cube(solvedCube);
+        cube.generateChildren();
+        assertEquals(0, cube.getGroup1Heuristic(), floatComparisonDelta);
+        assertEquals(0, cube.UCube.getGroup1Heuristic(), floatComparisonDelta);
+        assertEquals(1, cube.RCube.getGroup1Heuristic(), floatComparisonDelta);
+        assertEquals(1, cube.RPrimeCube.getGroup1Heuristic(), floatComparisonDelta);
+        assertEquals(1, cube.LCube.getGroup1Heuristic(), floatComparisonDelta);
+        assertEquals(1, cube.LPrimeCube.getGroup1Heuristic(), floatComparisonDelta);
+    }
+
+    @Test
     public void testChildren() {
         Cube cube = new Cube(sampleState);
         cube.generateChildren();
