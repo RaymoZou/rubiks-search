@@ -23,24 +23,47 @@ public class Cube {
     public char[] DB;
     public char[] DL;
 
+    // corners
+
+    public char[] UBL;
+    public char[] UBR;
+    public char[] UFR;
+    public char[] UFL;
+    public char[] DFR;
+    public char[] DFL;
+    public char[] DBR;
+    public char[] DBL;
+
     public static final int NUM_EDGES = 12;
 
-    public String currPath = "";
+    public Cube parent = null;
+    public String lastMove = "";
 
     public int depthLevel = 0;
 
     public Cube UCube = null;
     public Cube UPrimeCube = null;
+    public Cube U2Cube = null;
+
     public Cube FCube = null;
     public Cube FPrimeCube = null;
+    public Cube F2Cube = null;
+
     public Cube RCube = null;
     public Cube RPrimeCube = null;
+    public Cube R2Cube = null;
+
     public Cube LCube = null;
     public Cube LPrimeCube = null;
+    public Cube L2Cube = null;
+
     public Cube DCube = null;
     public Cube DPrimeCube = null;
+    public Cube D2Cube = null;
+
     public Cube BCube = null;
     public Cube BPrimeCube = null;
+    public Cube B2Cube = null;
 
     public Cube() {
         this.green = null;
@@ -59,6 +82,7 @@ public class Cube {
         orange = Arrays.copyOf(faces[4], faces[4].length);
         red = Arrays.copyOf(faces[5], faces[5].length);
         populateEdges();
+        populateCorners();
     }
 
     public Cube(char[][] faces, int depthLevel, String path) {
@@ -69,9 +93,10 @@ public class Cube {
         orange = Arrays.copyOf(faces[4], faces[4].length);
         red = Arrays.copyOf(faces[5], faces[5].length);
         populateEdges();
+        populateCorners();
 
         this.depthLevel = depthLevel;
-        this.currPath = path;
+        this.lastMove = path;
     }
 
     public float getGroup0FVal() {
@@ -87,7 +112,7 @@ public class Cube {
     }
 
     public boolean isGroup1Goal() {
-        return getNonCrossedEdges() == 0;
+        return getUnsolvedGroup1Pieces() == 0;
     }
 
     // 4 is the max number of edges that can become oriented with one move
@@ -96,8 +121,9 @@ public class Cube {
     }
 
     public float getGroup1Heuristic() {
-        return getNonCrossedEdges() / 2;
+        return getUnsolvedGroup1Pieces() / 6;
     }
+
 
     // group 0 -> group 1
     public boolean isEdgeOriented(char[] edge) {
@@ -118,14 +144,21 @@ public class Cube {
         return NUM_EDGES - edgeCount;
     }
 
-    // group 1
-    public float getNonCrossedEdges() {
-        int edgeCount = 0;
-        char[][] edges = {UB, UR, UF, UL, DF, DR, DB, DL};
-        for (char[] edge : edges) {
-            if (edge[0] == 'Y' || edge[0] == 'W') edgeCount++;
+    public float getUnsolvedGroup1Pieces() {
+        int count = 0;
+        char[][] corners = {UBL, UBR, UFL, UFR, DFL, DFR, DBL, DBR};
+        for (char[] corner : corners) {
+            if (corner[0] == 'Y' || corner[0] == 'W') count++;
         }
-        return 8 - edgeCount;
+        char[][] edges = {FL, FR, BL, BR};
+        for (char[] edge : edges) {
+            if (edge[0] == 'G') {
+                if (edge[1] == 'O' || edge[1] == 'R') count++;
+            } else if (edge[0] == 'B') {
+                if (edge[1] == 'O' || edge[1] == 'R') count++;
+            }
+        }
+        return 12 - count;
     }
 
     // all moves are assuming green front, white top orientation
@@ -154,6 +187,7 @@ public class Cube {
             }
         }
         populateEdges();
+        populateCorners();
     }
 
     private void populateEdges() {
@@ -174,6 +208,18 @@ public class Cube {
         DR = new char[]{yellow[5], red[7]};
         DB = new char[]{yellow[7], blue[7]};
         DL = new char[]{yellow[3], orange[7]};
+    }
+
+    private void populateCorners() {
+        UBL = new char[]{white[0], blue[2], orange[0]};
+        UBR = new char[]{white[2], blue[0], red[2]};
+        UFL = new char[]{white[6], green[0], orange[2]};
+        UFR = new char[]{white[8], green[2], red[0]};
+
+        DFL = new char[]{yellow[0], green[6], orange[8]};
+        DFR = new char[]{yellow[2], green[8], red[6]};
+        DBL = new char[]{yellow[6], blue[8], orange[6]};
+        DBR = new char[]{yellow[8], blue[6], red[8]};
     }
 
     public void turn(String mainFace, String[] sideFaces, int[][] changeIndices) {
@@ -210,35 +256,67 @@ public class Cube {
             setFace(sideFaces[i], sideFaceArrays[i]);
         }
         populateEdges();
+        populateCorners();
     }
 
     // getCubes
     public void generateChildren() {
-        UCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "U ");
-        UPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "U' ");
-        FCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "F ");
-        FPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "F' ");
-        BCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "B ");
-        BPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "B' ");
-        RCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "R ");
-        RPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "R' ");
-        LCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "L ");
-        LPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "L' ");
-        DCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "D ");
-        DPrimeCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, this.depthLevel + 1, this.currPath + "D' ");
+        String[] moves = {"U", "U'", "U2", "F", "F'", "F2", "B", "B'", "B2", "R", "R'", "R2", "L", "L'", "L2", "D", "D'", "D2",};
 
-        UCube.doU();
-        UPrimeCube.doUPrime();
-        FCube.doF();
-        FPrimeCube.doFPrime();
-        BCube.doB();
-        BPrimeCube.doBPrime();
-        RCube.doR();
-        RPrimeCube.doRPrime();
-        LCube.doL();
-        LPrimeCube.doLPrime();
-        DCube.doD();
-        DPrimeCube.doDPrime();
+        for (String move : moves) {
+            Cube tempCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, depthLevel + 1, move);
+            tempCube.scramble(move);
+            setChild(move, tempCube);
+        }
+
+    }
+
+    public Cube getChild(String childName) {
+        return switch (childName) {
+            case "U" -> UCube;
+            case "U'" -> UPrimeCube;
+            case "U2" -> U2Cube;
+            case "F" -> FCube;
+            case "F'" -> FPrimeCube;
+            case "F2" -> F2Cube;
+            case "B" -> BCube;
+            case "B'" -> BPrimeCube;
+            case "B2" -> B2Cube;
+            case "R" -> RCube;
+            case "R'" -> RPrimeCube;
+            case "R2" -> R2Cube;
+            case "L" -> LCube;
+            case "L':" -> LPrimeCube;
+            case "L2" -> L2Cube;
+            case "D" -> DCube;
+            case "D'" -> DPrimeCube;
+            case "D2" -> D2Cube;
+            default -> throw new IllegalArgumentException("Invalid childName: " + childName);
+        };
+    }
+
+    public void setChild(String childName, Cube value) {
+        switch (childName) {
+            case "U" -> UCube = value;
+            case "U'" -> UPrimeCube = value;
+            case "U2" -> U2Cube = value;
+            case "F" -> FCube = value;
+            case "F'" -> FPrimeCube = value;
+            case "F2" -> F2Cube = value;
+            case "B" -> BCube = value;
+            case "B'" -> BPrimeCube = value;
+            case "B2" -> B2Cube = value;
+            case "R" -> RCube = value;
+            case "R'" -> RPrimeCube = value;
+            case "R2" -> R2Cube = value;
+            case "L" -> LCube = value;
+            case "L'" -> LPrimeCube = value;
+            case "L2" -> L2Cube = value;
+            case "D" -> DCube = value;
+            case "D'" -> DPrimeCube = value;
+            case "D2" -> D2Cube = value;
+            default -> throw new IllegalArgumentException("Invalid childName: " + childName);
+        }
     }
 
     public void doU() {

@@ -62,6 +62,21 @@ public class CubeTest {
     }
 
     @Test
+    public void testCorners() {
+        Cube cube = new Cube(solvedCube);
+        cube.scramble(sampleScramble);
+        assertArrayEquals(new char[]{W, R, B}, cube.UBL);
+        assertArrayEquals(new char[]{Y, B, O}, cube.UBR);
+        assertArrayEquals(new char[]{R, Y, G}, cube.UFL);
+        assertArrayEquals(new char[]{W, G, R}, cube.UFR);
+
+        assertArrayEquals(new char[]{O, W, B}, cube.DFL);
+        assertArrayEquals(new char[]{O, G, Y}, cube.DFR);
+        assertArrayEquals(new char[]{G, O, W}, cube.DBL);
+        assertArrayEquals(new char[]{R, Y, B}, cube.DBR);
+    }
+
+    @Test
     public void testEdgeOrientation() {
         Cube cube = new Cube(solvedCube);
         cube.generateChildren();
@@ -74,7 +89,7 @@ public class CubeTest {
     }
 
     @Test
-    public void testEdgeCross() {
+    public void testGroup1Heuristics() {
         Cube cube = new Cube(solvedCube);
         cube.generateChildren();
         assertEquals(0, cube.getGroup1Heuristic(), floatComparisonDelta);
@@ -83,6 +98,26 @@ public class CubeTest {
         assertEquals(1, cube.RPrimeCube.getGroup1Heuristic(), floatComparisonDelta);
         assertEquals(1, cube.LCube.getGroup1Heuristic(), floatComparisonDelta);
         assertEquals(1, cube.LPrimeCube.getGroup1Heuristic(), floatComparisonDelta);
+    }
+
+    @Test
+    public void testGroup1Pieces() {
+        Cube cube = new Cube(solvedCube);
+        assertEquals(0, cube.getUnsolvedGroup1Pieces(), floatComparisonDelta);
+        cube.doRPrime();
+        assertEquals(6, cube.getUnsolvedGroup1Pieces(), floatComparisonDelta);
+        assertEquals(1, cube.getGroup1FVal(), floatComparisonDelta);
+        cube.doL();
+        assertEquals(12, cube.getUnsolvedGroup1Pieces(), floatComparisonDelta);
+        assertEquals(2, cube.getGroup1FVal(), floatComparisonDelta);
+
+        cube = new Cube(solvedCube);
+        cube.scramble("B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2 R2");
+        cube.doL();
+        cube.doU();
+        cube.doR();
+        cube.doF();
+
     }
 
     @Test
