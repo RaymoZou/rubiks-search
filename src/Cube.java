@@ -1,7 +1,7 @@
 import java.util.Arrays;
 
 public class Cube {
-    // faces
+    // each face is 18 bytes
     private char[] green;
     private char[] blue;
     private char[] white;
@@ -9,19 +9,19 @@ public class Cube {
     private char[] orange;
     private char[] red;
 
-    // edges
-    public char[] UB;
-    public char[] UR;
-    public char[] UF;
-    public char[] UL;
-    public char[] FR;
-    public char[] FL;
-    public char[] BR;
-    public char[] BL;
-    public char[] DF;
-    public char[] DR;
-    public char[] DB;
-    public char[] DL;
+//    // edges
+//    public char[] UB;
+//    public char[] UR;
+//    public char[] UF;
+//    public char[] UL;
+//    public char[] FR;
+//    public char[] FL;
+//    public char[] BR;
+//    public char[] BL;
+//    public char[] DF;
+//    public char[] DR;
+//    public char[] DB;
+//    public char[] DL;
 
     // corners
 
@@ -36,7 +36,6 @@ public class Cube {
 
     public static final int NUM_EDGES = 12;
 
-    public Cube parent = null;
     public String lastMove = "";
 
     public int depthLevel = 0;
@@ -81,7 +80,7 @@ public class Cube {
         yellow = Arrays.copyOf(faces[3], faces[3].length);
         orange = Arrays.copyOf(faces[4], faces[4].length);
         red = Arrays.copyOf(faces[5], faces[5].length);
-        populateEdges();
+//        populateEdges();
         populateCorners();
     }
 
@@ -92,7 +91,7 @@ public class Cube {
         yellow = Arrays.copyOf(faces[3], faces[3].length);
         orange = Arrays.copyOf(faces[4], faces[4].length);
         red = Arrays.copyOf(faces[5], faces[5].length);
-        populateEdges();
+//        populateEdges();
         populateCorners();
 
         this.depthLevel = depthLevel;
@@ -134,6 +133,23 @@ public class Cube {
 
     // group 0
     public float getNonOrientatedEdges() {
+
+        // create edges for easier access
+        char[] UB = new char[]{white[1], blue[1]};
+        char[] UR = new char[]{white[5], red[1]};
+        char[] UF = new char[]{white[7], green[1]};
+        char[] UL = new char[]{white[3], orange[1]};
+
+        char[] FR = new char[]{green[5], red[3]};
+        char[] FL = new char[]{green[3], orange[5]};
+        char[] BR = new char[]{blue[3], red[5]};
+        char[] BL = new char[]{blue[5], orange[3]};
+
+        char[] DF = new char[]{yellow[1], green[7]};
+        char[] DR = new char[]{yellow[5], red[7]};
+        char[] DB = new char[]{yellow[7], blue[7]};
+        char[] DL = new char[]{yellow[3], orange[7]};
+
         int edgeCount = 0;
         char[][] edges = {UB, UR, UF, UL, FR, FL, BR, BL, DF, DR, DB, DL};
         for (char[] edge : edges) {
@@ -145,6 +161,12 @@ public class Cube {
     }
 
     public float getUnsolvedGroup1Pieces() {
+
+        char[] FL = new char[]{green[3], orange[5]};
+        char[] FR = new char[]{green[5], red[3]};
+        char[] BL = new char[]{blue[5], orange[3]};
+        char[] BR = new char[]{blue[3], red[5]};
+
         int count = 0;
         char[][] corners = {UBL, UBR, UFL, UFR, DFL, DFR, DBL, DBR};
         for (char[] corner : corners) {
@@ -186,29 +208,29 @@ public class Cube {
                 case "D2" -> doD2();
             }
         }
-        populateEdges();
+//        populateEdges();
         populateCorners();
     }
 
-    private void populateEdges() {
-        // U Layer Edges
-        UB = new char[]{white[1], blue[1]};
-        UR = new char[]{white[5], red[1]};
-        UF = new char[]{white[7], green[1]};
-        UL = new char[]{white[3], orange[1]};
-
-        // Middle Edges
-        FR = new char[]{green[5], red[3]};
-        FL = new char[]{green[3], orange[5]};
-        BR = new char[]{blue[3], red[5]};
-        BL = new char[]{blue[5], orange[3]};
-
-        // D layer Edges
-        DF = new char[]{yellow[1], green[7]};
-        DR = new char[]{yellow[5], red[7]};
-        DB = new char[]{yellow[7], blue[7]};
-        DL = new char[]{yellow[3], orange[7]};
-    }
+//    private void populateEdges() {
+//        // U Layer Edges
+//        UB = new char[]{white[1], blue[1]};
+//        UR = new char[]{white[5], red[1]};
+//        UF = new char[]{white[7], green[1]};
+//        UL = new char[]{white[3], orange[1]};
+//
+//        // Middle Edges
+//        FR = new char[]{green[5], red[3]};
+//        FL = new char[]{green[3], orange[5]};
+//        BR = new char[]{blue[3], red[5]};
+//        BL = new char[]{blue[5], orange[3]};
+//
+//        // D layer Edges
+//        DF = new char[]{yellow[1], green[7]};
+//        DR = new char[]{yellow[5], red[7]};
+//        DB = new char[]{yellow[7], blue[7]};
+//        DL = new char[]{yellow[3], orange[7]};
+//    }
 
     private void populateCorners() {
         UBL = new char[]{white[0], blue[2], orange[0]};
@@ -255,8 +277,19 @@ public class Cube {
         for (int i = 0; i < sideFaceArrays.length; i++) {
             setFace(sideFaces[i], sideFaceArrays[i]);
         }
-        populateEdges();
+//        populateEdges();
         populateCorners();
+    }
+
+    public Cube[] getChildren() {
+        String[] moves = {"U", "U'", "U2", "F", "F'", "F2", "B", "B'", "B2", "R", "R'", "R2", "L", "L'", "L2", "D", "D'", "D2",};
+        Cube[] cubes = new Cube[18];
+        for (int i=0; i<moves.length; i++) {
+            Cube tempCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, depthLevel + 1, moves[i]);
+            tempCube.scramble(moves[i]);
+            cubes[i] = tempCube;
+        }
+        return cubes;
     }
 
     // getCubes

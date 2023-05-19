@@ -3,6 +3,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
 
+import java.text.FieldPosition;
+
 public class CubeTest {
 
     public static char G = 'G';
@@ -47,6 +49,18 @@ public class CubeTest {
         assertNull(cube.getFace("yellow"));
         assertNull(cube.getFace("red"));
         assertNull(cube.getFace("orange"));
+    }
+
+    @Test
+    public void testMemory() {
+        Cube cube = new Cube(solvedCube);
+        cube.generateChildren();
+        Cube cube1 = cube.RCube;
+        cube1 = cube.LCube;
+        cube1 = cube.RPrimeCube;
+        cube1 = cube.D2Cube;
+        cube1 = cube.FPrimeCube;
+        cube = null;
     }
 
     @Test
