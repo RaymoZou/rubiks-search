@@ -51,17 +51,17 @@ public class CubeTest {
         assertNull(cube.getFace("orange"));
     }
 
-    @Test
-    public void testMemory() {
-        Cube cube = new Cube(solvedCube);
-        cube.generateChildren();
-        Cube cube1 = cube.RCube;
-        cube1 = cube.LCube;
-        cube1 = cube.RPrimeCube;
-        cube1 = cube.D2Cube;
-        cube1 = cube.FPrimeCube;
-        cube = null;
-    }
+//    @Test
+//    public void testMemory() {
+//        Cube cube = new Cube(solvedCube);
+//        cube.generateChildren();
+//        Cube cube1 = cube.RCube;
+//        cube1 = cube.LCube;
+//        cube1 = cube.RPrimeCube;
+//        cube1 = cube.D2Cube;
+//        cube1 = cube.FPrimeCube;
+//        cube = null;
+//    }
 
     @Test
     public void testMultipleMoves() {
@@ -90,29 +90,29 @@ public class CubeTest {
         assertArrayEquals(new char[]{R, Y, B}, cube.DBR);
     }
 
-    @Test
-    public void testEdgeOrientation() {
-        Cube cube = new Cube(solvedCube);
-        cube.generateChildren();
-        assertEquals(0, cube.getGroup0Heuristic(), floatComparisonDelta);
-        assertEquals(0, cube.RCube.getGroup0Heuristic(), floatComparisonDelta);
-        assertEquals(1, cube.FCube.getGroup0Heuristic(), floatComparisonDelta);
-        assertEquals(1, cube.FPrimeCube.getGroup0Heuristic(), floatComparisonDelta);
-        assertEquals(1, cube.BCube.getGroup0Heuristic(), floatComparisonDelta);
-        assertEquals(1, cube.BPrimeCube.getGroup0Heuristic(), floatComparisonDelta);
-    }
+//    @Test
+//    public void testEdgeOrientation() {
+//        Cube cube = new Cube(solvedCube);
+//        cube.generateChildren();
+//        assertEquals(0, cube.getGroup0Heuristic(), floatComparisonDelta);
+//        assertEquals(0, cube.RCube.getGroup0Heuristic(), floatComparisonDelta);
+//        assertEquals(1, cube.FCube.getGroup0Heuristic(), floatComparisonDelta);
+//        assertEquals(1, cube.FPrimeCube.getGroup0Heuristic(), floatComparisonDelta);
+//        assertEquals(1, cube.BCube.getGroup0Heuristic(), floatComparisonDelta);
+//        assertEquals(1, cube.BPrimeCube.getGroup0Heuristic(), floatComparisonDelta);
+//    }
 
-    @Test
-    public void testGroup1Heuristics() {
-        Cube cube = new Cube(solvedCube);
-        cube.generateChildren();
-        assertEquals(0, cube.getGroup1Heuristic(), floatComparisonDelta);
-        assertEquals(0, cube.UCube.getGroup1Heuristic(), floatComparisonDelta);
-        assertEquals(1, cube.RCube.getGroup1Heuristic(), floatComparisonDelta);
-        assertEquals(1, cube.RPrimeCube.getGroup1Heuristic(), floatComparisonDelta);
-        assertEquals(1, cube.LCube.getGroup1Heuristic(), floatComparisonDelta);
-        assertEquals(1, cube.LPrimeCube.getGroup1Heuristic(), floatComparisonDelta);
-    }
+//    @Test
+//    public void testGroup1Heuristics() {
+//        Cube cube = new Cube(solvedCube);
+//        cube.generateChildren();
+//        assertEquals(0, cube.getGroup1Heuristic(), floatComparisonDelta);
+//        assertEquals(0, cube.UCube.getGroup1Heuristic(), floatComparisonDelta);
+//        assertEquals(1, cube.RCube.getGroup1Heuristic(), floatComparisonDelta);
+//        assertEquals(1, cube.RPrimeCube.getGroup1Heuristic(), floatComparisonDelta);
+//        assertEquals(1, cube.LCube.getGroup1Heuristic(), floatComparisonDelta);
+//        assertEquals(1, cube.LPrimeCube.getGroup1Heuristic(), floatComparisonDelta);
+//    }
 
     @Test
     public void testGroup1Pieces() {
@@ -134,13 +134,13 @@ public class CubeTest {
 
     }
 
-    @Test
-    public void testChildren() {
-        Cube cube = new Cube(sampleState);
-        cube.generateChildren();
-        assertArrayEquals(new char[]{R, Y, O, O, G, R, W, G, G,}, cube.UCube.getFace("green"));
-        assertEquals(1, cube.RCube.depthLevel);
-        cube.RCube.generateChildren();
-        assertEquals(2, cube.RCube.LCube.depthLevel);
-    }
+//    @Test
+//    public void testChildren() {
+//        Cube cube = new Cube(sampleState);
+//        cube.generateChildren();
+//        assertArrayEquals(new char[]{R, Y, O, O, G, R, W, G, G,}, cube.UCube.getFace("green"));
+//        assertEquals(1, cube.RCube.depthLevel);
+//        cube.RCube.generateChildren();
+//        assertEquals(2, cube.RCube.LCube.depthLevel);
+//    }
 }

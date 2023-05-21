@@ -30,8 +30,9 @@ public class Solver {
 
     public static void main(String[] args) {
         cube = new Cube(solvedCube);
-//        cube.scramble("B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2 R2");
-        cube.scramble("U2 L2 U' B U2 B2 L' D' R U2 B2 D R2 U2 L2 D' F2 R2 L2 B2 L2");
+//        cube.scramble("L D2 R2 L2");
+        cube.scramble("B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2 R2");
+//        cube.scramble("U2 L2 U' B U2 B2 L' D' R U2 B2 D R2 U2 L2 D' F2 R2 L2 B2 L2");
         solve(cube);
 
 //        while (true) {
@@ -80,7 +81,7 @@ public class Solver {
         System.out.println(divider);
 
         // GROUP 2
-        cube1.lastMove = "";
+        cube1.resetLastMove();
         cube1.depthLevel = 0;
         currPath.setLength(0);
         nodesSearched = 0;
@@ -110,7 +111,7 @@ public class Solver {
             if (node.isGroup0Goal()) {
                 cubePath.add(node);
                 for (Cube cube : cubePath) {
-                    currPath.append(cube.lastMove);
+                    currPath.append(cube.getLastMove());
                 }
                 return node;
             } else {
@@ -118,53 +119,43 @@ public class Solver {
             }
         }
         cubePath.add(node);
-//        node.generateChildren();
-//        Cube[] children = {
-//                node.UCube, node.UPrimeCube, node.U2Cube,
-//                node.FCube, node.FPrimeCube, node.F2Cube,
-//                node.RCube, node.RPrimeCube, node.R2Cube,
-//                node.DCube, node.DPrimeCube, node.D2Cube,
-//                node.LCube, node.LPrimeCube, node.L2Cube,
-//                node.BCube, node.BPrimeCube, node.B2Cube
-//        };
-//
 //        // prune redundant children
-//        if (node.lastMove.equals("U") || node.lastMove.equals("U'") || node.lastMove.equals("U2")) {
-//            children[0] = null;
-//            children[1] = null;
-//            children[2] = null;
-//        }
-//        if (node.lastMove.equals("F") || node.lastMove.equals("F'") || node.lastMove.equals("F2")) {
-//            children[3] = null;
-//            children[4] = null;
-//            children[5] = null;
-//        }
-//        if (node.lastMove.equals("R") || node.lastMove.equals("R'") || node.lastMove.equals("R2")) {
-//            children[6] = null;
-//            children[7] = null;
-//            children[8] = null;
-//        }
-//        if (node.lastMove.equals("D") || node.lastMove.equals("D'") || node.lastMove.equals("D2")) {
-//            children[9] = null;
-//            children[10] = null;
-//            children[11] = null;
-//        }
-//        if (node.lastMove.equals("L") || node.lastMove.equals("L'") || node.lastMove.equals("L2")) {
-//            children[12] = null;
-//            children[13] = null;
-//            children[14] = null;
-//        }
-//        if (node.lastMove.equals("B") || node.lastMove.equals("B'") || node.lastMove.equals("B2")) {
-//            children[15] = null;
-//            children[16] = null;
-//            children[17] = null;
-//        }
+        Cube[] children = node.getChildren();
+        if (node.getLastMove().equals("U") || node.getLastMove().equals("U'") || node.getLastMove().equals("U2")) {
+            children[0] = null;
+            children[1] = null;
+            children[2] = null;
+        }
+        if (node.getLastMove().equals("F") || node.getLastMove().equals("F'") || node.getLastMove().equals("F2")) {
+            children[3] = null;
+            children[4] = null;
+            children[5] = null;
+        }
+        if (node.getLastMove().equals("R") || node.getLastMove().equals("R'") || node.getLastMove().equals("R2")) {
+            children[6] = null;
+            children[7] = null;
+            children[8] = null;
+        }
+        if (node.getLastMove().equals("D") || node.getLastMove().equals("D'") || node.getLastMove().equals("D2")) {
+            children[9] = null;
+            children[10] = null;
+            children[11] = null;
+        }
+        if (node.getLastMove().equals("L") || node.getLastMove().equals("L'") || node.getLastMove().equals("L2")) {
+            children[12] = null;
+            children[13] = null;
+            children[14] = null;
+        }
+        if (node.getLastMove().equals("B") || node.getLastMove().equals("B'") || node.getLastMove().equals("B2")) {
+            children[15] = null;
+            children[16] = null;
+            children[17] = null;
+        }
 
-        for (Cube c : node.getChildren()) {
+        for (Cube c : children) {
             if (c != null) {
                 Cube result = DFS_Group0(c, depth - 1);
                 if (result != null) return result;
-                c = null;
             }
         }
         if (cubePath.size() != 0) cubePath.remove(cubePath.size() - 1);
@@ -186,7 +177,7 @@ public class Solver {
             if (node.isGroup1Goal()) {
                 cubePath.add(node);
                 for (Cube cube : cubePath) {
-                    currPath.append(cube.lastMove);
+                    currPath.append(cube.getLastMove());
                 }
                 return node;
             } else {
@@ -194,56 +185,50 @@ public class Solver {
             }
         }
         cubePath.add(node);
-//        node.generateChildren();
-//        Cube[] children = {
-//                node.UCube, node.UPrimeCube, node.U2Cube,
-//                null, null, node.F2Cube,
-//                node.RCube, node.RPrimeCube, node.R2Cube,
-//                node.DCube, node.DPrimeCube, node.D2Cube,
-//                node.LCube, node.LPrimeCube, node.L2Cube,
-//                null, null, node.B2Cube
-//        };
+        Cube[] children = node.getChildren();
 
 //        // prune redundant children
-//        if (node.lastMove.equals("U") || node.lastMove.equals("U'") || node.lastMove.equals("U2")) {
-//            children[0] = null;
-//            children[1] = null;
-//            children[2] = null;
-//        }
-//        if (node.lastMove.equals("F") || node.lastMove.equals("F'") || node.lastMove.equals("F2")) {
-//            children[3] = null;
-//            children[4] = null;
-//            children[5] = null;
-//        }
-//        if (node.lastMove.equals("R") || node.lastMove.equals("R'") || node.lastMove.equals("R2")) {
-//            children[6] = null;
-//            children[7] = null;
-//            children[8] = null;
-//        }
-//        if (node.lastMove.equals("D") || node.lastMove.equals("D'") || node.lastMove.equals("D2")) {
-//            children[9] = null;
-//            children[10] = null;
-//            children[11] = null;
-//        }
-//        if (node.lastMove.equals("L") || node.lastMove.equals("L'") || node.lastMove.equals("L2")) {
-//            children[12] = null;
-//            children[13] = null;
-//            children[14] = null;
-//        }
-//        if (node.lastMove.equals("B") || node.lastMove.equals("B'") || node.lastMove.equals("B2")) {
-//            children[15] = null;
-//            children[16] = null;
-//            children[17] = null;
-//        }
+        if (node.getLastMove().equals("U") || node.getLastMove().equals("U'") || node.getLastMove().equals("U2")) {
+            children[0] = null;
+            children[1] = null;
+            children[2] = null;
+        }
+        if (node.getLastMove().equals("F") || node.getLastMove().equals("F'") || node.getLastMove().equals("F2")) {
+            children[3] = null;
+            children[4] = null;
+            children[5] = null;
+        }
+        if (node.getLastMove().equals("R") || node.getLastMove().equals("R'") || node.getLastMove().equals("R2")) {
+            children[6] = null;
+            children[7] = null;
+            children[8] = null;
+        }
+        if (node.getLastMove().equals("D") || node.getLastMove().equals("D'") || node.getLastMove().equals("D2")) {
+            children[9] = null;
+            children[10] = null;
+            children[11] = null;
+        }
+        if (node.getLastMove().equals("B") || node.getLastMove().equals("B'") || node.getLastMove().equals("B2")) {
+            children[12] = null;
+            children[13] = null;
+            children[14] = null;
+        }
+        if (node.getLastMove().equals("L") || node.getLastMove().equals("L'") || node.getLastMove().equals("L2")) {
+            children[15] = null;
+            children[16] = null;
+            children[17] = null;
+        }
 
-        for (Cube c : node.getChildren()) {
+        children[0] = null;
+        children[1] = null;
+        children[9] = null;
+        children[10] = null;
+
+
+        for (Cube c : children) {
             if (c != null) {
                 Cube result = DFS_Group1(c, depth - 1);
-                if (result != null) {
-                    return result;
-                } else {
-                    c = null;
-                }
+                if (result != null) return result;
             }
         }
         if (cubePath.size() != 0) cubePath.remove(cubePath.size() - 1);

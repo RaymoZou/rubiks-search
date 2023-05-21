@@ -36,33 +36,33 @@ public class Cube {
 
     public static final int NUM_EDGES = 12;
 
-    public String lastMove = "";
+    private String lastMove = "";
 
     public int depthLevel = 0;
 
-    public Cube UCube = null;
-    public Cube UPrimeCube = null;
-    public Cube U2Cube = null;
-
-    public Cube FCube = null;
-    public Cube FPrimeCube = null;
-    public Cube F2Cube = null;
-
-    public Cube RCube = null;
-    public Cube RPrimeCube = null;
-    public Cube R2Cube = null;
-
-    public Cube LCube = null;
-    public Cube LPrimeCube = null;
-    public Cube L2Cube = null;
-
-    public Cube DCube = null;
-    public Cube DPrimeCube = null;
-    public Cube D2Cube = null;
-
-    public Cube BCube = null;
-    public Cube BPrimeCube = null;
-    public Cube B2Cube = null;
+//    public Cube UCube = null;
+//    public Cube UPrimeCube = null;
+//    public Cube U2Cube = null;
+//
+//    public Cube FCube = null;
+//    public Cube FPrimeCube = null;
+//    public Cube F2Cube = null;
+//
+//    public Cube RCube = null;
+//    public Cube RPrimeCube = null;
+//    public Cube R2Cube = null;
+//
+//    public Cube LCube = null;
+//    public Cube LPrimeCube = null;
+//    public Cube L2Cube = null;
+//
+//    public Cube DCube = null;
+//    public Cube DPrimeCube = null;
+//    public Cube D2Cube = null;
+//
+//    public Cube BCube = null;
+//    public Cube BPrimeCube = null;
+//    public Cube B2Cube = null;
 
     public Cube() {
         this.green = null;
@@ -96,6 +96,14 @@ public class Cube {
 
         this.depthLevel = depthLevel;
         this.lastMove = path;
+    }
+
+    public void resetLastMove() {
+        lastMove = "";
+    }
+
+    public String getLastMove() {
+        return lastMove;
     }
 
     public float getGroup0FVal() {
@@ -282,7 +290,7 @@ public class Cube {
     }
 
     public Cube[] getChildren() {
-        String[] moves = {"U", "U'", "U2", "F", "F'", "F2", "B", "B'", "B2", "R", "R'", "R2", "L", "L'", "L2", "D", "D'", "D2",};
+        String[] moves = {"U", "U'", "U2", "F", "F'", "F2", "R", "R'", "R2", "B", "B'", "B2", "D", "D'", "D2", "L", "L'", "L2"};
         Cube[] cubes = new Cube[18];
         for (int i=0; i<moves.length; i++) {
             Cube tempCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, depthLevel + 1, moves[i]);
@@ -293,64 +301,64 @@ public class Cube {
     }
 
     // getCubes
-    public void generateChildren() {
-        String[] moves = {"U", "U'", "U2", "F", "F'", "F2", "B", "B'", "B2", "R", "R'", "R2", "L", "L'", "L2", "D", "D'", "D2",};
+//    public void generateChildren() {
+//        String[] moves = {"U", "U'", "U2", "F", "F'", "F2", "B", "B'", "B2", "R", "R'", "R2", "L", "L'", "L2", "D", "D'", "D2",};
+//
+//        for (String move : moves) {
+//            Cube tempCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, depthLevel + 1, move);
+//            tempCube.scramble(move);
+//            setChild(move, tempCube);
+//        }
+//
+//    }
 
-        for (String move : moves) {
-            Cube tempCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, depthLevel + 1, move);
-            tempCube.scramble(move);
-            setChild(move, tempCube);
-        }
+//    public Cube getChild(String childName) {
+//        return switch (childName) {
+//            case "U" -> UCube;
+//            case "U'" -> UPrimeCube;
+//            case "U2" -> U2Cube;
+//            case "F" -> FCube;
+//            case "F'" -> FPrimeCube;
+//            case "F2" -> F2Cube;
+//            case "B" -> BCube;
+//            case "B'" -> BPrimeCube;
+//            case "B2" -> B2Cube;
+//            case "R" -> RCube;
+//            case "R'" -> RPrimeCube;
+//            case "R2" -> R2Cube;
+//            case "L" -> LCube;
+//            case "L':" -> LPrimeCube;
+//            case "L2" -> L2Cube;
+//            case "D" -> DCube;
+//            case "D'" -> DPrimeCube;
+//            case "D2" -> D2Cube;
+//            default -> throw new IllegalArgumentException("Invalid childName: " + childName);
+//        };
+//    }
 
-    }
-
-    public Cube getChild(String childName) {
-        return switch (childName) {
-            case "U" -> UCube;
-            case "U'" -> UPrimeCube;
-            case "U2" -> U2Cube;
-            case "F" -> FCube;
-            case "F'" -> FPrimeCube;
-            case "F2" -> F2Cube;
-            case "B" -> BCube;
-            case "B'" -> BPrimeCube;
-            case "B2" -> B2Cube;
-            case "R" -> RCube;
-            case "R'" -> RPrimeCube;
-            case "R2" -> R2Cube;
-            case "L" -> LCube;
-            case "L':" -> LPrimeCube;
-            case "L2" -> L2Cube;
-            case "D" -> DCube;
-            case "D'" -> DPrimeCube;
-            case "D2" -> D2Cube;
-            default -> throw new IllegalArgumentException("Invalid childName: " + childName);
-        };
-    }
-
-    public void setChild(String childName, Cube value) {
-        switch (childName) {
-            case "U" -> UCube = value;
-            case "U'" -> UPrimeCube = value;
-            case "U2" -> U2Cube = value;
-            case "F" -> FCube = value;
-            case "F'" -> FPrimeCube = value;
-            case "F2" -> F2Cube = value;
-            case "B" -> BCube = value;
-            case "B'" -> BPrimeCube = value;
-            case "B2" -> B2Cube = value;
-            case "R" -> RCube = value;
-            case "R'" -> RPrimeCube = value;
-            case "R2" -> R2Cube = value;
-            case "L" -> LCube = value;
-            case "L'" -> LPrimeCube = value;
-            case "L2" -> L2Cube = value;
-            case "D" -> DCube = value;
-            case "D'" -> DPrimeCube = value;
-            case "D2" -> D2Cube = value;
-            default -> throw new IllegalArgumentException("Invalid childName: " + childName);
-        }
-    }
+//    public void setChild(String childName, Cube value) {
+//        switch (childName) {
+//            case "U" -> UCube = value;
+//            case "U'" -> UPrimeCube = value;
+//            case "U2" -> U2Cube = value;
+//            case "F" -> FCube = value;
+//            case "F'" -> FPrimeCube = value;
+//            case "F2" -> F2Cube = value;
+//            case "B" -> BCube = value;
+//            case "B'" -> BPrimeCube = value;
+//            case "B2" -> B2Cube = value;
+//            case "R" -> RCube = value;
+//            case "R'" -> RPrimeCube = value;
+//            case "R2" -> R2Cube = value;
+//            case "L" -> LCube = value;
+//            case "L'" -> LPrimeCube = value;
+//            case "L2" -> L2Cube = value;
+//            case "D" -> DCube = value;
+//            case "D'" -> DPrimeCube = value;
+//            case "D2" -> D2Cube = value;
+//            default -> throw new IllegalArgumentException("Invalid childName: " + childName);
+//        }
+//    }
 
     public void doU() {
         String mainFace = "white";
