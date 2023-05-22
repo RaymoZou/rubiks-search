@@ -114,25 +114,25 @@ public class CubeTest {
 //        assertEquals(1, cube.LPrimeCube.getGroup1Heuristic(), floatComparisonDelta);
 //    }
 
-    @Test
-    public void testGroup1Pieces() {
-        Cube cube = new Cube(solvedCube);
-        assertEquals(0, cube.getUnsolvedGroup1Pieces(), floatComparisonDelta);
-        cube.doRPrime();
-        assertEquals(6, cube.getUnsolvedGroup1Pieces(), floatComparisonDelta);
-        assertEquals(1, cube.getGroup1FVal(), floatComparisonDelta);
-        cube.doL();
-        assertEquals(12, cube.getUnsolvedGroup1Pieces(), floatComparisonDelta);
-        assertEquals(2, cube.getGroup1FVal(), floatComparisonDelta);
-
-        cube = new Cube(solvedCube);
-        cube.scramble("B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2 R2");
-        cube.doL();
-        cube.doU();
-        cube.doR();
-        cube.doF();
-
-    }
+//    @Test
+//    public void testGroup1Pieces() {
+//        Cube cube = new Cube(solvedCube);
+//        assertEquals(0, cube.getUnsolvedGroup1Pieces(), floatComparisonDelta);
+//        cube.doRPrime();
+//        assertEquals(6, cube.getUnsolvedGroup1Pieces(), floatComparisonDelta);
+//        assertEquals(1, cube.getGroup1FVal(), floatComparisonDelta);
+//        cube.doL();
+//        assertEquals(12, cube.getUnsolvedGroup1Pieces(), floatComparisonDelta);
+//        assertEquals(2, cube.getGroup1FVal(), floatComparisonDelta);
+//
+//        cube = new Cube(solvedCube);
+//        cube.scramble("B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2 R2");
+//        cube.doL();
+//        cube.doU();
+//        cube.doR();
+//        cube.doF();
+//
+//    }
 
 //    @Test
 //    public void testChildren() {

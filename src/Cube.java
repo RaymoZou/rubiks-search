@@ -106,13 +106,13 @@ public class Cube {
         return lastMove;
     }
 
-    public float getGroup0FVal() {
-        return depthLevel + getGroup0Heuristic();
-    }
-
-    public float getGroup1FVal() {
-        return depthLevel + getGroup1Heuristic();
-    }
+//    public float getGroup0FVal() {
+//        return depthLevel + getGroup0Heuristic();
+//    }
+//
+//    public float getGroup1FVal() {
+//        return depthLevel + getGroup1Heuristic();
+//    }
 
     public boolean isGroup0Goal() {
         return getNonOrientatedEdges() == 0;
@@ -122,14 +122,18 @@ public class Cube {
         return getUnsolvedGroup1Pieces() == 0;
     }
 
-    // 4 is the max number of edges that can become oriented with one move
-    public float getGroup0Heuristic() {
-        return getNonOrientatedEdges() / 4;
+    public boolean isGroup2Goal() {
+        return getUnsolvedGroup2Pieces() == 0;
     }
 
-    public float getGroup1Heuristic() {
-        return getUnsolvedGroup1Pieces() / 6;
-    }
+    // 4 is the max number of edges that can become oriented with one move
+//    public float getGroup0Heuristic() {
+//        return getNonOrientatedEdges() / 4;
+//    }
+//
+//    public float getGroup1Heuristic() {
+//        return getUnsolvedGroup1Pieces() / 6;
+//    }
 
 
     // group 0 -> group 1
@@ -190,6 +194,31 @@ public class Cube {
         }
         return 12 - count;
     }
+
+    // 8 corners and 8 edges
+    public float getUnsolvedGroup2Pieces() {
+        int count = 0;
+        // 8 corners
+        if (UFL[1] == 'G' || UFL[1] == 'B') count++;
+        if (UFR[1] == 'G' || UFR[1] == 'B') count++;
+        if (DFL[1] == 'G' || DFL[1] == 'B') count++;
+        if (DFR[1] == 'G' || DFR[1] == 'B') count++;
+        if (UBL[1] == 'G' || UBL[1] == 'B') count++;
+        if (UBR[1] == 'G' || UBR[1] == 'B') count++;
+        if (DBL[1] == 'G' || DBL[1] == 'B') count++;
+        if (DBR[1] == 'G' || DBR[1] == 'B') count++;
+        // 8 edges
+        if (green[1] == 'G' || green[1] == 'B') count++;
+        if (orange[1] == 'O' || orange[1] == 'R') count++;
+        if (orange[7] == 'O' || orange[7] == 'R') count++;
+        if (green[7] == 'G' || green[7] == 'B') count++;
+        if (blue[1] == 'G' || blue[1] == 'B') count++;
+        if (red[1] == 'O' || red[1] == 'R') count++;
+        if (red[7] == 'O' || red[7] == 'R') count++;
+        if (blue[7] == 'G' || blue[7] == 'B') count++;
+        return 16 - count;
+    }
+
 
     // all moves are assuming green front, white top orientation
     public void scramble(String actions) {
@@ -290,7 +319,7 @@ public class Cube {
     }
 
     public Cube[] getChildren() {
-        String[] moves = {"U", "U'", "U2", "F", "F'", "F2", "R", "R'", "R2", "B", "B'", "B2", "D", "D'", "D2", "L", "L'", "L2"};
+        String[] moves = {"U", "U'", "U2", "F", "F'", "F2", "R", "R'", "R2", "D", "D'", "D2", "B", "B'", "B2", "L", "L'", "L2"};
         Cube[] cubes = new Cube[18];
         for (int i=0; i<moves.length; i++) {
             Cube tempCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, depthLevel + 1, moves[i]);
