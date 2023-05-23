@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Stack;
+import java.util.*;
 
 public class Solver {
 
@@ -30,9 +27,11 @@ public class Solver {
 
     public static void main(String[] args) {
         cube = new Cube(solvedCube);
-        cube.scramble("U L' B D B2 U R F R D' F2 B2 R2 F2 D L2 U F2 U2 R2 F2");
-//        cube.scramble("B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2 R2");
+//        cube.scramble("B2 L2 D2 R2 F2 B2 L2 B2 F2 R2");
+        cube.scramble("B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2 R2");
 //        cube.scramble("U2 L2 U' B U2 B2 L' D' R U2 B2 D R2 U2 L2 D' F2 R2 L2 B2 L2");
+
+//        cube.scramble("U L' B D B2 U R F R D' F2 B2 R2 F2 D L2 U F2 U2 R2 F2");
         solve(cube);
 
 //        while (true) {
@@ -101,9 +100,22 @@ public class Solver {
         nodesSearched = 0;
         cubePath.clear();
         Cube cube3 = IDDFS_Group2(cube2, maxDepth);
-        System.out.println("GROUP 1 -> GROUP 2 STAGE COMPLETE");
+        System.out.println("GROUP 2 -> GROUP 3 STAGE COMPLETE");
         System.out.println("searched " + nodesSearched + " nodes");
         System.out.println("solution found at depth: " + cube3.depthLevel);
+        System.out.println(currPath);
+        System.out.println(divider);
+
+        cube3.resetLastMove();
+        cube3.depthLevel = 0;
+        currPath.setLength(0);
+        nodesSearched = 0;
+        cubePath.clear();
+
+        Cube solvedCube = IDDFS_Group3(cube3, maxDepth);
+        System.out.println("GROUP 3 -> GROUP 4 STAGE COMPLETE");
+        System.out.println("searched " + nodesSearched + " nodes");
+        System.out.println("solution found at depth: " + solvedCube.depthLevel);
         System.out.println(currPath);
         System.out.println(divider);
     }
@@ -241,10 +253,11 @@ public class Solver {
             children[8] = null;
         }
 
-        children[0] = null;
-        children[1] = null;
-        children[9] = null;
-        children[10] = null;
+        // remove F, F', B, B'
+        children[3] = null;
+        children[4] = null;
+        children[12] = null;
+        children[13] = null;
 
         for (Cube c : children) {
             if (c != null) {
@@ -322,11 +335,11 @@ public class Solver {
             children[8] = null;
         }
 
-        // remove U, U', D, D'
-        children[0] = null;
-        children[1] = null;
-        children[9] = null;
-        children[10] = null;
+        // remove F, F', B, B'
+        children[3] = null;
+        children[4] = null;
+        children[12] = null;
+        children[13] = null;
         // remove L, L', R, R'
         children[15] = null;
         children[16] = null;
@@ -338,6 +351,48 @@ public class Solver {
                 Cube result = DFS_Group2(c, depth - 1);
                 if (result != null) return result;
             }
+        }
+        if (cubePath.size() != 0) cubePath.remove(cubePath.size() - 1);
+        return null;
+    }
+
+    static Cube IDDFS_Group3(Cube node, float maxDepth) {
+        for (int i = 0; i < maxDepth; i++) {
+            Cube result = DFS_Group3(node, i);
+            if (result != null) return result;
+            System.out.println("finished searching depth " + i);
+        }
+        return null;
+    }
+
+    static Cube DFS_Group3(Cube node, float depth) {
+        nodesSearched++;
+        if (depth == 0) {
+            if (node.isSolved()) {
+                cubePath.add(node);
+                for (Cube cube : cubePath) {
+                    currPath.append(cube.getLastMove());
+                }
+                return node;
+            } else {
+                return null;
+            }
+        }
+        cubePath.add(node);
+        Cube[] children;
+        if (Objects.equals(node.getLastMove(), "D2")) {
+            children = node.getChildren(new String[]{"F2", "R2", "B2", "L2"});
+        } else if (Objects.equals(node.getLastMove(), "B2")) {
+            children = node.getChildren(new String[]{"U2", "R2", "D2", "L2"});
+        } else if (Objects.equals(node.getLastMove(), "L2")) {
+            children = node.getChildren(new String[]{"U2", "F2", "D2", "B2"});
+        } else {
+            children = node.getChildren(new String[]{"U2", "F2", "R2", "D2", "B2", "L2"});
+        }
+
+        for (Cube c : children) {
+            Cube result = DFS_Group3(c, depth - 1);
+            if (result != null) return result;
         }
         if (cubePath.size() != 0) cubePath.remove(cubePath.size() - 1);
         return null;

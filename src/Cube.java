@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Cube {
     // each face is 18 bytes
@@ -124,6 +125,15 @@ public class Cube {
 
     public boolean isGroup2Goal() {
         return getUnsolvedGroup2Pieces() == 0;
+    }
+
+    public boolean isSolved() {
+        return Arrays.equals(green, new char[]{'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G'}) &&
+                Arrays.equals(blue, new char[]{'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B'}) &&
+                Arrays.equals(white, new char[]{'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'}) &&
+                Arrays.equals(yellow, new char[]{'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y'}) &&
+                Arrays.equals(orange, new char[]{'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'}) &&
+                Arrays.equals(red, new char[]{'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R'});
     }
 
     // 4 is the max number of edges that can become oriented with one move
@@ -321,9 +331,19 @@ public class Cube {
     public Cube[] getChildren() {
         String[] moves = {"U", "U'", "U2", "F", "F'", "F2", "R", "R'", "R2", "D", "D'", "D2", "B", "B'", "B2", "L", "L'", "L2"};
         Cube[] cubes = new Cube[18];
-        for (int i=0; i<moves.length; i++) {
+        for (int i = 0; i < moves.length; i++) {
             Cube tempCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, depthLevel + 1, moves[i]);
             tempCube.scramble(moves[i]);
+            cubes[i] = tempCube;
+        }
+        return cubes;
+    }
+
+    public Cube[] getChildren(String[] children) {
+        Cube[] cubes = new Cube[children.length];
+        for (int i = 0; i < children.length; i++) {
+            Cube tempCube = new Cube(new char[][]{green, blue, white, yellow, orange, red}, depthLevel + 1, children[i]);
+            tempCube.scramble(children[i]);
             cubes[i] = tempCube;
         }
         return cubes;
