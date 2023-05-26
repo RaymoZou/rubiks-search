@@ -27,8 +27,9 @@ public class Solver {
 
     public static void main(String[] args) {
         cube = new Cube(solvedCube);
-//        cube.scramble("B2 L2 D2 R2 F2 B2 L2 B2 F2 R2");
-        cube.scramble("B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2 R2");
+//         (3+8+6+6 = 23 move solution)
+        cube.scramble("D' B2 F2 L' F2 L' F2 L' B2 R2 D2 R' U2 D F' D R2 F' L2 F2");
+//        cube.scramble("B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2 R2");
 //        cube.scramble("U2 L2 U' B U2 B2 L' D' R U2 B2 D R2 U2 L2 D' F2 R2 L2 B2 L2");
 
 //        cube.scramble("U L' B D B2 U R F R D' F2 B2 R2 F2 D L2 U F2 U2 R2 F2");
@@ -210,54 +211,15 @@ public class Solver {
             }
         }
         cubePath.add(node);
-        Cube[] children = node.getChildren();
-
-        // prune redundant children
-        if (node.getLastMove().equals("U") || node.getLastMove().equals("U'") || node.getLastMove().equals("U2")) {
-            children[0] = null;
-            children[1] = null;
-            children[2] = null;
-        }
-        if (node.getLastMove().equals("F") || node.getLastMove().equals("F'") || node.getLastMove().equals("F2")) {
-            children[3] = null;
-            children[4] = null;
-            children[5] = null;
-        }
-        if (node.getLastMove().equals("R") || node.getLastMove().equals("R'") || node.getLastMove().equals("R2")) {
-            children[6] = null;
-            children[7] = null;
-            children[8] = null;
-        }
-        if (node.getLastMove().equals("D") || node.getLastMove().equals("D'") || node.getLastMove().equals("D2")) {
-            children[9] = null;
-            children[10] = null;
-            children[11] = null;
-            children[0] = null;
-            children[1] = null;
-            children[2] = null;
-        }
-        if (node.getLastMove().equals("B") || node.getLastMove().equals("B'") || node.getLastMove().equals("B2")) {
-            children[12] = null;
-            children[13] = null;
-            children[14] = null;
-            children[3] = null;
-            children[4] = null;
-            children[5] = null;
-        }
-        if (node.getLastMove().equals("L") || node.getLastMove().equals("L'") || node.getLastMove().equals("L2")) {
-            children[15] = null;
-            children[16] = null;
-            children[17] = null;
-            children[6] = null;
-            children[7] = null;
-            children[8] = null;
-        }
-
-        // remove F, F', B, B'
-        children[3] = null;
-        children[4] = null;
-        children[12] = null;
-        children[13] = null;
+        Cube[] children = switch (node.getLastMove()) {
+            case "U", "U'", "U2" -> node.getChildren(new String[]{"F2", "R", "R'", "R2", "D", "D'", "D2", "B2", "L", "L'", "L2"});
+            case "F2" -> node.getChildren(new String[]{"U", "U'", "U2", "R", "R'", "R2", "D", "D'", "D2", "B2", "L", "L'", "L2"});
+            case "R", "R'", "R2" -> node.getChildren(new String[]{"U", "U'", "U2", "F2", "D", "D'", "D2", "B2", "L", "L'", "L2"});
+            case "D", "D'", "D2" -> node.getChildren(new String[]{"F2", "R", "R'", "R2", "B2", "L", "L'", "L2"});
+            case "B2" -> node.getChildren(new String[]{"U", "U'", "U2", "R", "R'", "R2", "D", "D'", "D2", "L", "L'", "L2"});
+            case "L", "L'", "L2" -> node.getChildren(new String[]{"U", "U'", "U2", "F2", "D", "D'", "D2", "B2"});
+            default -> node.getChildren(new String[]{"U", "U'", "U2", "F2", "R", "R'", "R2", "D", "D'", "D2", "B2", "L", "L'", "L2"});
+        };
 
         for (Cube c : children) {
             if (c != null) {
@@ -292,59 +254,15 @@ public class Solver {
             }
         }
         cubePath.add(node);
-        Cube[] children = node.getChildren();
-
-//        // prune redundant children
-        if (node.getLastMove().equals("U") || node.getLastMove().equals("U'") || node.getLastMove().equals("U2")) {
-            children[0] = null;
-            children[1] = null;
-            children[2] = null;
-        }
-        if (node.getLastMove().equals("F") || node.getLastMove().equals("F'") || node.getLastMove().equals("F2")) {
-            children[3] = null;
-            children[4] = null;
-            children[5] = null;
-        }
-        if (node.getLastMove().equals("R") || node.getLastMove().equals("R'") || node.getLastMove().equals("R2")) {
-            children[6] = null;
-            children[7] = null;
-            children[8] = null;
-        }
-        if (node.getLastMove().equals("D") || node.getLastMove().equals("D'") || node.getLastMove().equals("D2")) {
-            children[9] = null;
-            children[10] = null;
-            children[11] = null;
-            children[0] = null;
-            children[1] = null;
-            children[2] = null;
-        }
-        if (node.getLastMove().equals("B") || node.getLastMove().equals("B'") || node.getLastMove().equals("B2")) {
-            children[12] = null;
-            children[13] = null;
-            children[14] = null;
-            children[3] = null;
-            children[4] = null;
-            children[5] = null;
-        }
-        if (node.getLastMove().equals("L") || node.getLastMove().equals("L'") || node.getLastMove().equals("L2")) {
-            children[15] = null;
-            children[16] = null;
-            children[17] = null;
-            children[6] = null;
-            children[7] = null;
-            children[8] = null;
-        }
-
-        // remove F, F', B, B'
-        children[3] = null;
-        children[4] = null;
-        children[12] = null;
-        children[13] = null;
-        // remove L, L', R, R'
-        children[15] = null;
-        children[16] = null;
-        children[6] = null;
-        children[7] = null;
+        Cube[] children = switch (node.getLastMove()) {
+            case "U", "U'", "U2" -> node.getChildren(new String[]{"F2", "R2", "D", "D'", "D2", "B2", "L2"});
+            case "F2" -> node.getChildren(new String[]{"U", "U'", "U2", "R2", "D", "D'", "D2", "B2", "L2"});
+            case "R2" -> node.getChildren(new String[]{"U", "U'", "U2", "F2", "D", "D'", "D2", "B2", "L2"});
+            case "D", "D'", "D2" -> node.getChildren(new String[]{"F2", "R2", "B2", "L2"});
+            case "B2" -> node.getChildren(new String[]{"U", "U'", "U2", "R2", "D", "D'", "D2", "L2"});
+            case "L2" -> node.getChildren(new String[]{"U", "U'", "U2", "F2", "D", "D'", "D2", "B2"});
+            default -> node.getChildren(new String[]{"U", "U'", "U2", "F2", "R2", "D", "D'", "D2", "B2", "L2"});
+        };
 
         for (Cube c : children) {
             if (c != null) {
@@ -379,16 +297,15 @@ public class Solver {
             }
         }
         cubePath.add(node);
-        Cube[] children;
-        if (Objects.equals(node.getLastMove(), "D2")) {
-            children = node.getChildren(new String[]{"F2", "R2", "B2", "L2"});
-        } else if (Objects.equals(node.getLastMove(), "B2")) {
-            children = node.getChildren(new String[]{"U2", "R2", "D2", "L2"});
-        } else if (Objects.equals(node.getLastMove(), "L2")) {
-            children = node.getChildren(new String[]{"U2", "F2", "D2", "B2"});
-        } else {
-            children = node.getChildren(new String[]{"U2", "F2", "R2", "D2", "B2", "L2"});
-        }
+        Cube[] children = switch (node.getLastMove()) {
+            case "U2" -> node.getChildren(new String[]{"F2", "R2", "D2", "B2", "L2"});
+            case "F2" -> node.getChildren(new String[]{"U2", "R2", "D2", "B2", "L2"});
+            case "R2" -> node.getChildren(new String[]{"U2", "F2", "D2", "B2", "L2"});
+            case "D2" -> node.getChildren(new String[]{"F2", "R2", "B2", "L2"});
+            case "B2" -> node.getChildren(new String[]{"U2", "R2", "D2", "L2"});
+            case "L2" -> node.getChildren(new String[]{"U2", "F2", "D2", "B2"});
+            default -> node.getChildren(new String[]{"U2", "F2", "R2", "D2", "B2", "L2"});
+        };
 
         for (Cube c : children) {
             Cube result = DFS_Group3(c, depth - 1);
