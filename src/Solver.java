@@ -14,6 +14,8 @@ public class Solver {
     static Cube result = null;
     static ArrayList<Cube> cubeStack = new ArrayList<>();
 
+    static float minPruned = Integer.MAX_VALUE;
+
 
     static char[][] solvedCube = {
             {'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G'},
@@ -71,54 +73,129 @@ public class Solver {
 
     static void solve(Cube root) {
         Cube cube1 = null;
-        int maxDepth = Integer.MAX_VALUE;
-        cube1 = IDDFS_Group0(root, maxDepth);
 
+        float group0_threshold = root.getGroup0FVal();
+        while (cube1 == null) {
+            cube1 = IdaStarSearch_Group0(root, group0_threshold);
+            group0_threshold = minPruned; // repeat IDA with new threshold
+            minPruned = Integer.MAX_VALUE; // reset the minPruned value
+        }
+//
         System.out.println("GROUP 0 -> GROUP 1 STAGE COMPLETE");
         System.out.println("searched " + nodesSearched + " nodes");
         System.out.println("solution found at depth: " + cube1.depthLevel);
         System.out.println(currPath);
         System.out.println(divider);
 
-        // GROUP 2
+//        // GROUP 2
         cube1.resetLastMove();
         cube1.depthLevel = 0;
         currPath.setLength(0);
         nodesSearched = 0;
         cubePath.clear();
+        minPruned = Integer.MAX_VALUE;
 
-        Cube cube2 = IDDFS_Group1(cube1, maxDepth);
+        Cube cube2 = null;
+        float group1_threshold = cube1.getGroup1FVal();
+        while (cube2 == null) {
+            cube2 = IdaStarSearch_Group1(cube1, group1_threshold);
+            group1_threshold = minPruned; // repeat IDA with new threshold
+            minPruned = Integer.MAX_VALUE; // reset the minPruned value
+        }
+
         System.out.println("GROUP 1 -> GROUP 2 STAGE COMPLETE");
         System.out.println("searched " + nodesSearched + " nodes");
-        System.out.println("solution found at depth: " + cube2.depthLevel);
+        System.out.println("solution found at depth: " + cube1.depthLevel);
         System.out.println(currPath);
         System.out.println(divider);
+//
+//        Cube cube2 = IDDFS_Group1(cube1, maxDepth);
+//        System.out.println("GROUP 1 -> GROUP 2 STAGE COMPLETE");
+//        System.out.println("searched " + nodesSearched + " nodes");
+//        System.out.println("solution found at depth: " + cube2.depthLevel);
+//        System.out.println(currPath);
+//        System.out.println(divider);
+//
+//        // group 3
+//        cube2.resetLastMove();
+//        cube2.depthLevel = 0;
+//        currPath.setLength(0);
+//        nodesSearched = 0;
+//        cubePath.clear();
+//        Cube cube3 = IDDFS_Group2(cube2, maxDepth);
+//        System.out.println("GROUP 2 -> GROUP 3 STAGE COMPLETE");
+//        System.out.println("searched " + nodesSearched + " nodes");
+//        System.out.println("solution found at depth: " + cube3.depthLevel);
+//        System.out.println(currPath);
+//        System.out.println(divider);
+//
+//        cube3.resetLastMove();
+//        cube3.depthLevel = 0;
+//        currPath.setLength(0);
+//        nodesSearched = 0;
+//        cubePath.clear();
+//
+//        Cube solvedCube = IDDFS_Group3(cube3, maxDepth);
+//        System.out.println("GROUP 3 -> GROUP 4 STAGE COMPLETE");
+//        System.out.println("searched " + nodesSearched + " nodes");
+//        System.out.println("solution found at depth: " + solvedCube.depthLevel);
+//        System.out.println(currPath);
+//        System.out.println(divider);
+    }
 
-        // group 3
-        cube2.resetLastMove();
-        cube2.depthLevel = 0;
-        currPath.setLength(0);
-        nodesSearched = 0;
-        cubePath.clear();
-        Cube cube3 = IDDFS_Group2(cube2, maxDepth);
-        System.out.println("GROUP 2 -> GROUP 3 STAGE COMPLETE");
-        System.out.println("searched " + nodesSearched + " nodes");
-        System.out.println("solution found at depth: " + cube3.depthLevel);
-        System.out.println(currPath);
-        System.out.println(divider);
+    static Cube IdaStarSearch_Group0(Cube node, float threshold) {
+        if (node.isGroup0Goal()) {
+            cubePath.add(node);
+            for (Cube cube : cubePath) {
+                currPath.append(cube.getLastMove());
+            }
+            return node;
+        }
+        cubePath.add(node);
+        if ((node.getGroup0FVal() <= threshold)) {
+            // expand
+            Cube[] children = node.getChildren();
+            for (Cube c : children) {
+                Cube result = IdaStarSearch_Group0(c, threshold);
+                if (result != null) return result;
+            }
+        } else {
+            if (node.getGroup0FVal() <= minPruned) minPruned = node.getGroup0FVal();
+        }
+        if (cubePath.size() != 0) cubePath.remove(cubePath.size() - 1);
+        return null;
+    }
 
-        cube3.resetLastMove();
-        cube3.depthLevel = 0;
-        currPath.setLength(0);
-        nodesSearched = 0;
-        cubePath.clear();
-
-        Cube solvedCube = IDDFS_Group3(cube3, maxDepth);
-        System.out.println("GROUP 3 -> GROUP 4 STAGE COMPLETE");
-        System.out.println("searched " + nodesSearched + " nodes");
-        System.out.println("solution found at depth: " + solvedCube.depthLevel);
-        System.out.println(currPath);
-        System.out.println(divider);
+    static Cube IdaStarSearch_Group1(Cube node, float threshold) {
+        nodesSearched++;
+        if (node.isGroup1Goal()) {
+            cubePath.add(node);
+            for (Cube cube : cubePath) {
+                currPath.append(cube.getLastMove());
+            }
+            return node;
+        }
+        cubePath.add(node);
+        if ((node.getGroup1FVal() <= threshold)) {
+            // expand
+            Cube[] children = switch (node.getLastMove()) {
+                case "U", "U'", "U2" -> node.getChildren(new String[]{"F2", "R", "R'", "R2", "D", "D'", "D2", "B2", "L", "L'", "L2"});
+                case "F2" -> node.getChildren(new String[]{"U", "U'", "U2", "R", "R'", "R2", "D", "D'", "D2", "B2", "L", "L'", "L2"});
+                case "R", "R'", "R2" -> node.getChildren(new String[]{"U", "U'", "U2", "F2", "D", "D'", "D2", "B2", "L", "L'", "L2"});
+                case "D", "D'", "D2" -> node.getChildren(new String[]{"F2", "R", "R'", "R2", "B2", "L", "L'", "L2"});
+                case "B2" -> node.getChildren(new String[]{"U", "U'", "U2", "R", "R'", "R2", "D", "D'", "D2", "L", "L'", "L2"});
+                case "L", "L'", "L2" -> node.getChildren(new String[]{"U", "U'", "U2", "F2", "D", "D'", "D2", "B2"});
+                default -> node.getChildren(new String[]{"U", "U'", "U2", "F2", "R", "R'", "R2", "D", "D'", "D2", "B2", "L", "L'", "L2"});
+            };
+            for (Cube c : children) {
+                Cube result = IdaStarSearch_Group1(c, threshold);
+                if (result != null) return result;
+            }
+        } else {
+            if (node.getGroup1FVal() <= minPruned) minPruned = node.getGroup1FVal();
+        }
+        if (cubePath.size() != 0) cubePath.remove(cubePath.size() - 1);
+        return null;
     }
 
     // to orientate all edges

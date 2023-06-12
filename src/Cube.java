@@ -1,5 +1,4 @@
 import java.util.Arrays;
-import java.util.Objects;
 
 public class Cube {
     // each face is 18 bytes
@@ -11,18 +10,18 @@ public class Cube {
     private char[] red;
 
 //    // edges
-//    public char[] UB;
-//    public char[] UR;
-//    public char[] UF;
-//    public char[] UL;
-//    public char[] FR;
-//    public char[] FL;
-//    public char[] BR;
-//    public char[] BL;
-//    public char[] DF;
-//    public char[] DR;
-//    public char[] DB;
-//    public char[] DL;
+    public char[] UB;
+    public char[] UR;
+    public char[] UF;
+    public char[] UL;
+    public char[] FR;
+    public char[] FL;
+    public char[] BR;
+    public char[] BL;
+    public char[] DF;
+    public char[] DR;
+    public char[] DB;
+    public char[] DL;
 
     // corners
 
@@ -81,7 +80,7 @@ public class Cube {
         yellow = Arrays.copyOf(faces[3], faces[3].length);
         orange = Arrays.copyOf(faces[4], faces[4].length);
         red = Arrays.copyOf(faces[5], faces[5].length);
-//        populateEdges();
+        populateEdges();
         populateCorners();
     }
 
@@ -92,7 +91,7 @@ public class Cube {
         yellow = Arrays.copyOf(faces[3], faces[3].length);
         orange = Arrays.copyOf(faces[4], faces[4].length);
         red = Arrays.copyOf(faces[5], faces[5].length);
-//        populateEdges();
+        populateEdges();
         populateCorners();
 
         this.depthLevel = depthLevel;
@@ -116,7 +115,7 @@ public class Cube {
 //    }
 
     public boolean isGroup0Goal() {
-        return getNonOrientatedEdges() == 0;
+        return getUnsolvedGroup0Pieces() == 0;
     }
 
     public boolean isGroup1Goal() {
@@ -128,22 +127,42 @@ public class Cube {
     }
 
     public boolean isSolved() {
-        return Arrays.equals(green, new char[]{'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G'}) &&
-                Arrays.equals(blue, new char[]{'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B'}) &&
-                Arrays.equals(white, new char[]{'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'}) &&
-                Arrays.equals(yellow, new char[]{'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y'}) &&
-                Arrays.equals(orange, new char[]{'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'}) &&
-                Arrays.equals(red, new char[]{'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R'});
+        return getUnsolvedGroup3Pieces() == 0;
+    }
+
+    public float getGroup0FVal() {
+        return getGroup0Heuristic() + depthLevel;
+    }
+
+    public float getGroup1FVal() {
+        return getGroup1Heuristic() + depthLevel;
+    }
+
+    public float getGroup2FVal() {
+        return getGroup2Heuristic() + depthLevel;
+    }
+
+    public float getGroup3FVal() {
+        return getGroup3Heuristic() + depthLevel;
     }
 
     // 4 is the max number of edges that can become oriented with one move
-//    public float getGroup0Heuristic() {
-//        return getNonOrientatedEdges() / 4;
-//    }
+    public float getGroup0Heuristic() {
+        return getUnsolvedGroup0Pieces() / 4;
+    }
+
 //
-//    public float getGroup1Heuristic() {
-//        return getUnsolvedGroup1Pieces() / 6;
-//    }
+    public float getGroup1Heuristic() {
+        return getUnsolvedGroup1Pieces() / 6;
+    }
+
+    public float getGroup2Heuristic() {
+        return getUnsolvedGroup2Pieces() / 8;
+    }
+
+    public float getGroup3Heuristic() {
+        return getUnsolvedGroup3Pieces() / 8;
+    }
 
 
     // group 0 -> group 1
@@ -154,7 +173,7 @@ public class Cube {
     }
 
     // group 0
-    public float getNonOrientatedEdges() {
+    public float getUnsolvedGroup0Pieces() {
 
         // create edges for easier access
         char[] UB = new char[]{white[1], blue[1]};
@@ -229,6 +248,46 @@ public class Cube {
         return 16 - count;
     }
 
+    public float getUnsolvedGroup3Pieces() {
+        // TODO: replace this with a for loop!
+        char[][] solvedArray = {
+                {'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G'},
+                {'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B'},
+                {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
+                {'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y'},
+                {'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'},
+                {'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R'}
+        };
+        Cube solvedCube = new Cube(solvedArray);
+        int solvedPieces = 0;
+
+        // 8 corners
+        if (Arrays.equals(UFL, solvedCube.UFL)) solvedPieces++;
+        if (Arrays.equals(UFR, solvedCube.UFR)) solvedPieces++;
+        if (Arrays.equals(DFL, solvedCube.DFL)) solvedPieces++;
+        if (Arrays.equals(DFR, solvedCube.DFR)) solvedPieces++;
+        if (Arrays.equals(UBL, solvedCube.UBL)) solvedPieces++;
+        if (Arrays.equals(UBR, solvedCube.UBR)) solvedPieces++;
+        if (Arrays.equals(DBL, solvedCube.DBL)) solvedPieces++;
+        if (Arrays.equals(DBR, solvedCube.DBR)) solvedPieces++;
+
+        // 12 edges
+        if (Arrays.equals(UB, solvedCube.UB)) solvedPieces++;
+        if (Arrays.equals(UR, solvedCube.UR)) solvedPieces++;
+        if (Arrays.equals(UF, solvedCube.UF)) solvedPieces++;
+        if (Arrays.equals(UL, solvedCube.UL)) solvedPieces++;
+        if (Arrays.equals(FL, solvedCube.FL)) solvedPieces++;
+        if (Arrays.equals(FR, solvedCube.FR)) solvedPieces++;
+        if (Arrays.equals(BL, solvedCube.BL)) solvedPieces++;
+        if (Arrays.equals(BR, solvedCube.BR)) solvedPieces++;
+        if (Arrays.equals(DB, solvedCube.DB)) solvedPieces++;
+        if (Arrays.equals(DR, solvedCube.DR)) solvedPieces++;
+        if (Arrays.equals(DF, solvedCube.DF)) solvedPieces++;
+        if (Arrays.equals(DL, solvedCube.DL)) solvedPieces++;
+
+        return 20 - solvedPieces;
+    }
+
 
     // all moves are assuming green front, white top orientation
     public void scramble(String actions) {
@@ -255,29 +314,29 @@ public class Cube {
                 case "D2" -> doD2();
             }
         }
-//        populateEdges();
+        populateEdges();
         populateCorners();
     }
 
-//    private void populateEdges() {
-//        // U Layer Edges
-//        UB = new char[]{white[1], blue[1]};
-//        UR = new char[]{white[5], red[1]};
-//        UF = new char[]{white[7], green[1]};
-//        UL = new char[]{white[3], orange[1]};
-//
-//        // Middle Edges
-//        FR = new char[]{green[5], red[3]};
-//        FL = new char[]{green[3], orange[5]};
-//        BR = new char[]{blue[3], red[5]};
-//        BL = new char[]{blue[5], orange[3]};
-//
-//        // D layer Edges
-//        DF = new char[]{yellow[1], green[7]};
-//        DR = new char[]{yellow[5], red[7]};
-//        DB = new char[]{yellow[7], blue[7]};
-//        DL = new char[]{yellow[3], orange[7]};
-//    }
+    private void populateEdges() {
+        // U Layer Edges
+        UB = new char[]{white[1], blue[1]};
+        UR = new char[]{white[5], red[1]};
+        UF = new char[]{white[7], green[1]};
+        UL = new char[]{white[3], orange[1]};
+
+        // Middle Edges
+        FR = new char[]{green[5], red[3]};
+        FL = new char[]{green[3], orange[5]};
+        BR = new char[]{blue[3], red[5]};
+        BL = new char[]{blue[5], orange[3]};
+
+        // D layer Edges
+        DF = new char[]{yellow[1], green[7]};
+        DR = new char[]{yellow[5], red[7]};
+        DB = new char[]{yellow[7], blue[7]};
+        DL = new char[]{yellow[3], orange[7]};
+    }
 
     private void populateCorners() {
         UBL = new char[]{white[0], blue[2], orange[0]};
@@ -324,7 +383,7 @@ public class Cube {
         for (int i = 0; i < sideFaceArrays.length; i++) {
             setFace(sideFaces[i], sideFaceArrays[i]);
         }
-//        populateEdges();
+        populateEdges();
         populateCorners();
     }
 
