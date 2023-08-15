@@ -1,7 +1,7 @@
 # Iterative Depth First Search (IDFS) Cube Solver
 ## Version 1.0.0
 
-This is a Rubik's Cube Solver that implements Thistletwaite's Algorithm using a series of iterative depth-first searches to solve sequential subgroups. Cube states are represented as an array of chars and actions correspond to quarter and half turns of each face.
+This is a Rubik's Cube Solver that implements Thistletwaite's Algorithm using a series of iterative depth-first searches to solve sequential subgroups. Cube states are represented as an array of chars and actions correspond to quarter and half turns of each face. This version of the solver is created using Python and the numpy library.
 
 ## Example scrambles
 ### B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2 R2
