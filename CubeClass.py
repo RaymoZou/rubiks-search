@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 
 
 class Cube:
@@ -18,6 +19,8 @@ class Cube:
             self.orange = np.array(value[3])
             self.yellow = np.array(value[4])
             self.white = np.array(value[5])
+
+        self.last_move = None
 
     def set_face(self, face, newFace):
         if face == 'green':
@@ -50,6 +53,14 @@ class Cube:
         edges = s.white[[1, 5, 7, 3]]
         s.white[[1, 5, 7, 3]] = np.roll(edges, shift=turn_num)
 
+        # set last move
+        if turn_num == 1:
+            s.last_move = "U"
+        elif turn_num == -1:
+            s.last_move = "U'"
+        elif turn_num == 2:
+            s.last_move = "U2"
+
     def turn_D(self, turn_num):
         s = self
         # set side faces
@@ -67,6 +78,13 @@ class Cube:
         edges = s.yellow[[1, 5, 7, 3]]
         s.yellow[[1, 5, 7, 3]] = np.roll(edges, shift=turn_num)
 
+        if turn_num == 1:
+            s.last_move = "D"
+        elif turn_num == -1:
+            s.last_move = "D'"
+        elif turn_num == 2:
+            s.last_move = "D2"
+
     def turn_R(self, turn_num):
         s = self
         # set side faces
@@ -83,6 +101,13 @@ class Cube:
         # set main face edges
         edges = s.red[[1, 5, 7, 3]]
         s.red[[1, 5, 7, 3]] = np.roll(edges, shift=turn_num)
+
+        if turn_num == 1:
+            s.last_move = "R"
+        elif turn_num == -1:
+            s.last_move = "R'"
+        elif turn_num == 2:
+            s.last_move = "R2"
 
     def turn_L(self, turn_num):
         s = self
@@ -103,6 +128,13 @@ class Cube:
         edges = s.orange[[1, 5, 7, 3]]
         s.orange[[1, 5, 7, 3]] = np.roll(edges, shift=turn_num)
 
+        if turn_num == 1:
+            s.last_move = "L"
+        elif turn_num == -1:
+            s.last_move = "L'"
+        elif turn_num == 2:
+            s.last_move = "L2"
+
     def turn_F(self, turn_num):
         s = self
         temp_arr = np.concatenate(
@@ -118,6 +150,13 @@ class Cube:
         # set main face edges
         edges = s.green[[1, 5, 7, 3]]
         s.green[[1, 5, 7, 3]] = np.roll(edges, shift=turn_num)
+
+        if turn_num == 1:
+            s.last_move = "F"
+        elif turn_num == -1:
+            s.last_move = "F'"
+        elif turn_num == 2:
+            s.last_move = "F2"
 
     def turn_B(self, turn_num):
         s = self
@@ -135,6 +174,13 @@ class Cube:
         # set main face edges
         edges = s.blue[[1, 5, 7, 3]]
         s.blue[[1, 5, 7, 3]] = np.roll(edges, shift=turn_num)
+
+        if turn_num == 1:
+            s.last_move = "B"
+        elif turn_num == -1:
+            s.last_move = "B'"
+        elif turn_num == 2:
+            s.last_move = "B2"
 
     def print_faces(self):
         print('\n'.join(''.join(self.white[i:i+3])
@@ -160,7 +206,7 @@ class Cube:
             return False
         elif edge[1] == 'w' or edge[1] == 'y':
             return False
-        return True   
+        return True
 
     def get_unsolved_group_1_edges(self) -> int:
         unsolved_edges = 0
@@ -174,7 +220,7 @@ class Cube:
         dr = np.array([self.yellow[5], self.red[7]])
         db = np.array([self.yellow[7], self.blue[7]])
         dl = np.array([self.yellow[3], self.orange[7]])
-        
+
         fr = np.array([self.green[5], self.red[3]])
         fl = np.array([self.green[3], self.orange[5]])
         br = np.array([self.blue[3], self.red[5]])
@@ -228,8 +274,64 @@ class Cube:
                 self.turn_B(-1)
             elif moves[i] == "B2":
                 self.turn_B(2)
-            
 
-    # TODO:
-    def get_children_nodes():
-        return np.array()
+    # TODO: make more readable
+    def get_children_nodes(self):
+        r_cube = copy.deepcopy(self)
+        r2_cube = copy.deepcopy(self)
+        r_prime_cube = copy.deepcopy(self)
+        l_cube = copy.deepcopy(self)
+        l2_cube = copy.deepcopy(self)
+        l_prime_cube = copy.deepcopy(self)
+        u_cube = copy.deepcopy(self)
+        u2_cube = copy.deepcopy(self)
+        u_prime_cube = copy.deepcopy(self)
+        d_cube = copy.deepcopy(self)
+        d2_cube = copy.deepcopy(self)
+        d_prime_cube = copy.deepcopy(self)
+        f_cube = copy.deepcopy(self)
+        f2_cube = copy.deepcopy(self)
+        f_prime_cube = copy.deepcopy(self)
+        b_cube = copy.deepcopy(self)
+        b2_cube = copy.deepcopy(self)
+        b_prime_cube = copy.deepcopy(self)
+        # r_cube, r_prime_cube, r2_cube = copy.deepcopy(self)
+        # l_cube, l_prime_cube, l2_cube = copy.deepcopy(self)
+        # u_cube, u_prime_cube, u2_cube = copy.deepcopy(self)
+        # d_cube, d_prime_cube, d2_cube = copy.deepcopy(self)
+        # f_cube, f_prime_cube, f2_cube = copy.deepcopy(self)
+        # b_cube, b_prime_cube, b2_cube = copy.deepcopy(self)
+
+        # r moves
+        r_cube.turn_R(1)
+        r_prime_cube.turn_R(-1)
+        r2_cube.turn_R(2)
+        # l moves
+        l_cube.turn_L(1)
+        l_prime_cube.turn_L(-1)
+        l2_cube.turn_L(2)
+        # u moves
+        u_cube.turn_U(1)
+        u_prime_cube.turn_U(-1)
+        u2_cube.turn_U(2)
+        # d moves
+        d_cube.turn_D(1)
+        d_prime_cube.turn_D(-1)
+        d2_cube.turn_D(2)
+        # f moves
+        f_cube.turn_F(1)
+        f_prime_cube.turn_F(-1)
+        f2_cube.turn_F(2)
+        # b moves
+        b_cube.turn_B(1)
+        b_prime_cube.turn_B(-1)
+        b2_cube.turn_B(2)
+
+        return np.array([
+            r_cube, r_prime_cube, r2_cube,
+            l_cube, l_prime_cube, l2_cube,
+            u_cube, u_prime_cube, u2_cube,
+            d_cube, d_prime_cube, d2_cube,
+            f_cube, f_prime_cube, f2_cube,
+            b_cube, b_prime_cube, b2_cube,
+        ])
