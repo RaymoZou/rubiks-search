@@ -155,15 +155,14 @@ class Cube:
         print('\n'.join(''.join(self.yellow[i:i+3])
                         for i in range(0, len(self.yellow), 3)))
 
-    def is_group_1_edge(self, edge):
+    def is_group_1_edge(self, edge) -> bool:
         if edge[0] == 'r' or edge[0] == 'o':
             return False
         elif edge[1] == 'w' or edge[1] == 'y':
             return False
-        return True
-        
+        return True   
 
-    def get_unsolved_group_1_edges(self):
+    def get_unsolved_group_1_edges(self) -> int:
         unsolved_edges = 0
 
         ub = np.array([self.white[1], self.blue[1]])
@@ -188,5 +187,49 @@ class Cube:
 
         return unsolved_edges
 
-    def is_group_1_goal(self):
+    def is_group_1_goal(self) -> bool:
         return self.get_unsolved_group_1_edges() == 0
+
+    def do_moves(self, moves: str):
+        for i in range(len(moves)):
+            if moves[i] == 'R':
+                self.turn_R(1)
+            elif moves[i] == "R'":
+                self.turn_R(-1)
+            elif moves[i] == "R2":
+                self.turn_R(2)
+            elif moves[i] == "L":
+                self.turn_L(1)
+            elif moves[i] == "L'":
+                self.turn_L(-1)
+            elif moves[i] == "L2":
+                self.turn_L(2)
+            elif moves[i] == "U":
+                self.turn_U(1)
+            elif moves[i] == "U'":
+                self.turn_U(-1)
+            elif moves[i] == "U2":
+                self.turn_U(2)
+            elif moves[i] == "D":
+                self.turn_D(1)
+            elif moves[i] == "D'":
+                self.turn_D(-1)
+            elif moves[i] == "D2":
+                self.turn_D(2)
+            elif moves[i] == "F":
+                self.turn_F(1)
+            elif moves[i] == "F'":
+                self.turn_F(-1)
+            elif moves[i] == "F2":
+                self.turn_F(2)
+            elif moves[i] == "B":
+                self.turn_B(1)
+            elif moves[i] == "B'":
+                self.turn_B(-1)
+            elif moves[i] == "B2":
+                self.turn_B(2)
+            
+
+    # TODO:
+    def get_children_nodes():
+        return np.array()
