@@ -154,3 +154,39 @@ class Cube:
         print('------------')
         print('\n'.join(''.join(self.yellow[i:i+3])
                         for i in range(0, len(self.yellow), 3)))
+
+    def is_group_1_edge(self, edge):
+        if edge[0] == 'r' or edge[0] == 'o':
+            return False
+        elif edge[1] == 'w' or edge[1] == 'y':
+            return False
+        return True
+        
+
+    def get_unsolved_group_1_edges(self):
+        unsolved_edges = 0
+
+        ub = np.array([self.white[1], self.blue[1]])
+        ur = np.array([self.white[5], self.red[1]])
+        uf = np.array([self.white[7], self.green[1]])
+        ul = np.array([self.white[3], self.orange[1]])
+
+        df = np.array([self.yellow[1], self.green[7]])
+        dr = np.array([self.yellow[5], self.red[7]])
+        db = np.array([self.yellow[7], self.blue[7]])
+        dl = np.array([self.yellow[3], self.orange[7]])
+        
+        fr = np.array([self.green[5], self.red[3]])
+        fl = np.array([self.green[3], self.orange[5]])
+        br = np.array([self.blue[3], self.red[5]])
+        bl = np.array([self.blue[5], self.orange[3]])
+
+        edges = [ub, ur, uf, ul, df, dr, db, dl, fr, fl, br, bl]
+        for edge in edges:
+            if self.is_group_1_edge(edge) == False:
+                unsolved_edges += 1
+
+        return unsolved_edges
+
+    def is_group_1_goal(self):
+        return self.get_unsolved_group_1_edges() == 0
