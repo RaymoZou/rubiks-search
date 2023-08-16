@@ -1,6 +1,4 @@
 from CubeClass import Cube
-import numpy as np
-import sys
 
 w, y, r, o, g, b = 'w', 'y', 'r', 'o', 'g', 'b'
 sample_state = [
@@ -11,32 +9,41 @@ sample_state = [
     [y, g, o, b, y, w, y, r, r],
     [w, o, g, r, w, y, b, y, w]
 ]
-
 scrambled_cube = Cube(sample_state)
 
-# takes a Cube and returns a Cube with orientated edges
-def iddfs_group1(cube):
-    print("solution found")
+curr_solution = []
+
+def iddfs_group0(cube):
     # dfs_threshold = sys.maxsize
-    dfs_threshold = 1000
+    dfs_threshold = 10
     for i in range(dfs_threshold):
-        if dfs_group1(cube, i) != None:
+        if dfs_group0(cube, i) != None:
             return cube
+        print("finish searching depth: " + str(i))
     return None
 
-def dfs_group1(cube: Cube, depth: int):
+
+def dfs_group0(cube: Cube, depth: int):
     # if cube is solution - return cube
     # if dfs_treshold reached, return None
-        # else generate children and recurse
+    # else generate children and recurse
     if depth == 0:
-        if cube.is_group_1_goal(): return cube
-        else: return None
-
+        if cube.is_group_1_goal():
+            print("group 0 solution found")
+            return cube
+        else:
+            return None
     # generate children nodes
-    
-    
-# F L2 U2 F' R2 U2 F D2 U2 B' F' R2 L' U' L F2 U B R2 U L
+    children = cube.get_children_nodes()
+    for cube in children:
+        if cube != None:
+            curr_solution.append(cube.last_move)
+            result = dfs_group0(cube, depth-1)
+            if result != None:
+                return result
+            curr_solution.pop()
+
 
 # Group 0 -> Group 1
-# iddfs_group1(scrambled_cube)
-r_cube = Cube()
+iddfs_group0(scrambled_cube)
+print(curr_solution)
