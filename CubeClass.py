@@ -201,14 +201,14 @@ class Cube:
         print('\n'.join(''.join(self.yellow[i:i+3])
                         for i in range(0, len(self.yellow), 3)))
 
-    def is_group_1_edge(self, edge) -> bool:
+    def is_group_0_edge(self, edge) -> bool:
         if edge[0] == 'r' or edge[0] == 'o':
             return False
         elif edge[1] == 'w' or edge[1] == 'y':
             return False
         return True
 
-    def get_unsolved_group_1_edges(self) -> int:
+    def get_unsolved_group_0_edges(self) -> int:
         unsolved_edges = 0
 
         ub = np.array([self.white[1], self.blue[1]])
@@ -228,13 +228,47 @@ class Cube:
 
         edges = [ub, ur, uf, ul, df, dr, db, dl, fr, fl, br, bl]
         for edge in edges:
-            if self.is_group_1_edge(edge) == False:
+            if self.is_group_0_edge(edge) == False:
                 unsolved_edges += 1
 
         return unsolved_edges
 
+    def is_group_0_goal(self) -> bool:
+        return self.get_unsolved_group_0_edges() == 0
+
+    def get_unsolved_group_1_pieces(self) -> int:
+        solved_pieces = 0
+
+        # corners
+        ubl = np.array([self.white[0], self.blue[2], self.orange[0]])
+        ubr = np.array([self.white[2], self.blue[0], self.red[2]])
+        ufl = np.array([self.white[6], self.green[0], self.orange[2]])
+        ufr = np.array([self.white[8], self.green[2], self.red[0]])
+
+        dfl = np.array([self.yellow[0], self.green[6], self.orange[8]])
+        dfr = np.array([self.yellow[2], self.green[8], self.red[6]])
+        dbl = np.array([self.yellow[6], self.blue[8], self.orange[6]])
+        dbr = np.array([self.yellow[8], self.blue[6], self.red[8]])
+        corners = np.array([ubl, ubr, ufl, ufr, dfl, dfr, dbl, dbr])
+        for corner in corners:
+            if corner[0] == "y" or corner[0] == "w":
+                solved_pieces += 1
+
+        # edges
+        fl = np.array([self.green[3], self.orange[5]])
+        fr = np.array([self.green[5], self.red[3]])
+        bl = np.array([self.blue[5], self.orange[3]])
+        br = np.array([self.blue[3], self.red[5]])
+        edges = np.array([fl, fr, bl, br])
+        for edge in edges:
+            if edge[0] == "g" or edge[0] == "b":
+                if edge[1] == "o" or edge[1] == "r":
+                    solved_pieces += 1
+
+        return 12 - solved_pieces
+
     def is_group_1_goal(self) -> bool:
-        return self.get_unsolved_group_1_edges() == 0
+        return self.get_unsolved_group_1_pieces() == 0
 
     def do_moves(self, moves: str):
         for i in range(len(moves)):
@@ -289,18 +323,12 @@ class Cube:
         d_cube = copy.deepcopy(self)
         d2_cube = copy.deepcopy(self)
         d_prime_cube = copy.deepcopy(self)
-        f_cube = copy.deepcopy(self)
-        f2_cube = copy.deepcopy(self)
-        f_prime_cube = copy.deepcopy(self)
-        b_cube = copy.deepcopy(self)
+        f_cube = copy.deepcopy(self) # 12
+        f2_cube = copy.deepcopy(self) 
+        f_prime_cube = copy.deepcopy(self) # 14
+        b_cube = copy.deepcopy(self) # 15
         b2_cube = copy.deepcopy(self)
-        b_prime_cube = copy.deepcopy(self)
-        # r_cube, r_prime_cube, r2_cube = copy.deepcopy(self)
-        # l_cube, l_prime_cube, l2_cube = copy.deepcopy(self)
-        # u_cube, u_prime_cube, u2_cube = copy.deepcopy(self)
-        # d_cube, d_prime_cube, d2_cube = copy.deepcopy(self)
-        # f_cube, f_prime_cube, f2_cube = copy.deepcopy(self)
-        # b_cube, b_prime_cube, b2_cube = copy.deepcopy(self)
+        b_prime_cube = copy.deepcopy(self) # 17
 
         # r moves
         r_cube.turn_R(1)
