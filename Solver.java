@@ -14,59 +14,64 @@ public class Solver {
     static Cube result = null;
     static ArrayList<Cube> cubeStack = new ArrayList<>();
 
-
     static char[][] solvedCube = {
-            {'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G'},
-            {'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B'},
-            {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
-            {'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y'},
-            {'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O'},
-            {'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R'}
+            { 'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G' },
+            { 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B' },
+            { 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W' },
+            { 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y' },
+            { 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O' },
+            { 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R' }
     };
-
 
     public static void main(String[] args) {
         cube = new Cube(solvedCube);
-//         (3+8+6+6 = 23 move solution)
-        cube.scramble("D' B2 F2 L' F2 L' F2 L' B2 R2 D2 R' U2 D F' D R2 F' L2 F2");
-//        cube.scramble("B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2 R2");
-//        cube.scramble("U2 L2 U' B U2 B2 L' D' R U2 B2 D R2 U2 L2 D' F2 R2 L2 B2 L2");
+        // (3+8+6+6 = 23 move solution)
+        // cube.scramble("D' B2 F2 L' F2 L' F2 L' B2 R2 D2 R' U2 D F' D R2 F' L2 F2");
 
-//        cube.scramble("U L' B D B2 U R F R D' F2 B2 R2 F2 D L2 U F2 U2 R2 F2");
+        cube.scramble("L' B2 U2 B2 D U' R2 F2 U' R2 F2 B' D2 R' D F2 R2 F D2 U");
+
+        // -- SCRAMBLES THAT DON'T WORK --
+
+        // cube.scramble("B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2
+        // R2");
+        // cube.scramble("U2 L2 U' B U2 B2 L' D' R U2 B2 D R2 U2 L2 D' F2 R2 L2 B2 L2");
+        // cube.scramble("U L' B D B2 U R F R D' F2 B2 R2 F2 D L2 U F2 U2 R2 F2");
         solve(cube);
 
-//        while (true) {
-//            System.out.println("Enter command:");
-//            scanner = new Scanner(System.in);
-//            String command = scanner.nextLine();
-//            switch (command) {
-//                case "scramble":
-//                    cube = new Cube(solvedCube);
-//                    cube.scramble("F' R");
-//                    cube.scramble("B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2 R2");
-////                    cube.scramble("U2 L2 U' B U2 B2 L' D' R U2 B2 D R2 U2 L2 D' F2 R2 L2 B2 L2");
-////                    cube.doR2();
-//                    break;
-//                case "input":
-//                    enterCubeInfo();
-//                case "solve":
-//                    solve(cube);
-//                    break;
-//                case "view":
-//                    cube.printFaces();
-//                    break;
-//                case "oriented edges":
-//                    System.out.print(cube.getNonOrientatedEdges());
-//                    break;
-//                case "help":
-//                    System.out.println("solve, quit, help");
-//                case "quit":
-//                    System.exit(0);
-//                default:
-//                    System.out.println("unrecognized command, try again");
-//            }
-//            System.out.println(divider);
-//        }
+        // while (true) {
+        // System.out.println("Enter command:");
+        // scanner = new Scanner(System.in);
+        // String command = scanner.nextLine();
+        // switch (command) {
+        // case "scramble":
+        // cube = new Cube(solvedCube);
+        // cube.scramble("F' R");
+        // cube.scramble("B2 F2 D R2 F2 L2 R2 U' B2 L2 D2 F2 B' D2 R' B' L' D B2 L2
+        // R2");
+        //// cube.scramble("U2 L2 U' B U2 B2 L' D' R U2 B2 D R2 U2 L2 D' F2 R2 L2 B2
+        // L2");
+        //// cube.doR2();
+        // break;
+        // case "input":
+        // enterCubeInfo();
+        // case "solve":
+        // solve(cube);
+        // break;
+        // case "view":
+        // cube.printFaces();
+        // break;
+        // case "oriented edges":
+        // System.out.print(cube.getNonOrientatedEdges());
+        // break;
+        // case "help":
+        // System.out.println("solve, quit, help");
+        // case "quit":
+        // System.exit(0);
+        // default:
+        // System.out.println("unrecognized command, try again");
+        // }
+        // System.out.println(divider);
+        // }
     }
 
     static void solve(Cube root) {
@@ -125,7 +130,8 @@ public class Solver {
     static Cube IDDFS_Group0(Cube node, float depth) {
         for (int i = 0; i < depth; i++) {
             Cube result = DFS_Group0(node, i);
-            if (result != null) return result;
+            if (result != null)
+                return result;
             System.out.println("finished searching depth " + i);
         }
         return null;
@@ -145,7 +151,7 @@ public class Solver {
             }
         }
         cubePath.add(node);
-//        // prune redundant children
+        // // prune redundant children
         Cube[] children = node.getChildren();
         if (node.getLastMove().equals("U") || node.getLastMove().equals("U'") || node.getLastMove().equals("U2")) {
             children[0] = null;
@@ -181,17 +187,20 @@ public class Solver {
         for (Cube c : children) {
             if (c != null) {
                 Cube result = DFS_Group0(c, depth - 1);
-                if (result != null) return result;
+                if (result != null)
+                    return result;
             }
         }
-        if (cubePath.size() != 0) cubePath.remove(cubePath.size() - 1);
+        if (cubePath.size() != 0)
+            cubePath.remove(cubePath.size() - 1);
         return null;
     }
 
     static Cube IDDFS_Group1(Cube node, float maxDepth) {
         for (int i = 0; i < maxDepth; i++) {
             Cube result = DFS_Group1(node, i);
-            if (result != null) return result;
+            if (result != null)
+                return result;
             System.out.println("finished searching depth " + i);
         }
         return null;
@@ -212,29 +221,37 @@ public class Solver {
         }
         cubePath.add(node);
         Cube[] children = switch (node.getLastMove()) {
-            case "U", "U'", "U2" -> node.getChildren(new String[]{"F2", "R", "R'", "R2", "D", "D'", "D2", "B2", "L", "L'", "L2"});
-            case "F2" -> node.getChildren(new String[]{"U", "U'", "U2", "R", "R'", "R2", "D", "D'", "D2", "B2", "L", "L'", "L2"});
-            case "R", "R'", "R2" -> node.getChildren(new String[]{"U", "U'", "U2", "F2", "D", "D'", "D2", "B2", "L", "L'", "L2"});
-            case "D", "D'", "D2" -> node.getChildren(new String[]{"F2", "R", "R'", "R2", "B2", "L", "L'", "L2"});
-            case "B2" -> node.getChildren(new String[]{"U", "U'", "U2", "R", "R'", "R2", "D", "D'", "D2", "L", "L'", "L2"});
-            case "L", "L'", "L2" -> node.getChildren(new String[]{"U", "U'", "U2", "F2", "D", "D'", "D2", "B2"});
-            default -> node.getChildren(new String[]{"U", "U'", "U2", "F2", "R", "R'", "R2", "D", "D'", "D2", "B2", "L", "L'", "L2"});
+            case "U", "U'", "U2" ->
+                node.getChildren(new String[] { "F2", "R", "R'", "R2", "D", "D'", "D2", "B2", "L", "L'", "L2" });
+            case "F2" -> node.getChildren(
+                    new String[] { "U", "U'", "U2", "R", "R'", "R2", "D", "D'", "D2", "B2", "L", "L'", "L2" });
+            case "R", "R'", "R2" ->
+                node.getChildren(new String[] { "U", "U'", "U2", "F2", "D", "D'", "D2", "B2", "L", "L'", "L2" });
+            case "D", "D'", "D2" -> node.getChildren(new String[] { "F2", "R", "R'", "R2", "B2", "L", "L'", "L2" });
+            case "B2" ->
+                node.getChildren(new String[] { "U", "U'", "U2", "R", "R'", "R2", "D", "D'", "D2", "L", "L'", "L2" });
+            case "L", "L'", "L2" -> node.getChildren(new String[] { "U", "U'", "U2", "F2", "D", "D'", "D2", "B2" });
+            default -> node.getChildren(
+                    new String[] { "U", "U'", "U2", "F2", "R", "R'", "R2", "D", "D'", "D2", "B2", "L", "L'", "L2" });
         };
 
         for (Cube c : children) {
             if (c != null) {
                 Cube result = DFS_Group1(c, depth - 1);
-                if (result != null) return result;
+                if (result != null)
+                    return result;
             }
         }
-        if (cubePath.size() != 0) cubePath.remove(cubePath.size() - 1);
+        if (cubePath.size() != 0)
+            cubePath.remove(cubePath.size() - 1);
         return null;
     }
 
     static Cube IDDFS_Group2(Cube node, float maxDepth) {
         for (int i = 0; i < maxDepth; i++) {
             Cube result = DFS_Group2(node, i);
-            if (result != null) return result;
+            if (result != null)
+                return result;
             System.out.println("finished searching depth " + i);
         }
         return null;
@@ -255,30 +272,34 @@ public class Solver {
         }
         cubePath.add(node);
         Cube[] children = switch (node.getLastMove()) {
-            case "U", "U'", "U2" -> node.getChildren(new String[]{"F2", "R2", "D", "D'", "D2", "B2", "L2"});
-            case "F2" -> node.getChildren(new String[]{"U", "U'", "U2", "R2", "D", "D'", "D2", "B2", "L2"});
-            case "R2" -> node.getChildren(new String[]{"U", "U'", "U2", "F2", "D", "D'", "D2", "B2", "L2"});
-            case "D", "D'", "D2" -> node.getChildren(new String[]{"F2", "R2", "B2", "L2"});
-            case "B2" -> node.getChildren(new String[]{"U", "U'", "U2", "R2", "D", "D'", "D2", "L2"});
-            case "L2" -> node.getChildren(new String[]{"U", "U'", "U2", "F2", "D", "D'", "D2", "B2"});
-            default -> node.getChildren(new String[]{"U", "U'", "U2", "F2", "R2", "D", "D'", "D2", "B2", "L2"});
+            case "U", "U'", "U2" -> node.getChildren(new String[] { "F2", "R2", "D", "D'", "D2", "B2", "L2" });
+            case "F2" -> node.getChildren(new String[] { "U", "U'", "U2", "R2", "D", "D'", "D2", "B2", "L2" });
+            case "R2" -> node.getChildren(new String[] { "U", "U'", "U2", "F2", "D", "D'", "D2", "B2", "L2" });
+            case "D", "D'", "D2" -> node.getChildren(new String[] { "F2", "R2", "B2", "L2" });
+            case "B2" -> node.getChildren(new String[] { "U", "U'", "U2", "R2", "D", "D'", "D2", "L2" });
+            case "L2" -> node.getChildren(new String[] { "U", "U'", "U2", "F2", "D", "D'", "D2", "B2" });
+            default -> node.getChildren(new String[] { "U", "U'", "U2", "F2", "R2", "D", "D'", "D2", "B2", "L2" });
         };
 
         for (Cube c : children) {
             if (c != null) {
                 Cube result = DFS_Group2(c, depth - 1);
-                if (result != null) return result;
+                if (result != null)
+                    return result;
             }
         }
-        if (cubePath.size() != 0) cubePath.remove(cubePath.size() - 1);
+        if (cubePath.size() != 0)
+            cubePath.remove(cubePath.size() - 1);
         return null;
     }
 
     static Cube IDDFS_Group3(Cube node, float maxDepth) {
         for (int i = 0; i < maxDepth; i++) {
             Cube result = DFS_Group3(node, i);
-            if (result != null) return result;
+            if (result != null)
+                return result;
             System.out.println("finished searching depth " + i);
+            System.out.println(nodesSearched);
         }
         return null;
     }
@@ -298,20 +319,22 @@ public class Solver {
         }
         cubePath.add(node);
         Cube[] children = switch (node.getLastMove()) {
-            case "U2" -> node.getChildren(new String[]{"F2", "R2", "D2", "B2", "L2"});
-            case "F2" -> node.getChildren(new String[]{"U2", "R2", "D2", "B2", "L2"});
-            case "R2" -> node.getChildren(new String[]{"U2", "F2", "D2", "B2", "L2"});
-            case "D2" -> node.getChildren(new String[]{"F2", "R2", "B2", "L2"});
-            case "B2" -> node.getChildren(new String[]{"U2", "R2", "D2", "L2"});
-            case "L2" -> node.getChildren(new String[]{"U2", "F2", "D2", "B2"});
-            default -> node.getChildren(new String[]{"U2", "F2", "R2", "D2", "B2", "L2"});
+            case "U2" -> node.getChildren(new String[] { "F2", "R2", "D2", "B2", "L2" });
+            case "F2" -> node.getChildren(new String[] { "U2", "R2", "D2", "B2", "L2" });
+            case "R2" -> node.getChildren(new String[] { "U2", "F2", "D2", "B2", "L2" });
+            case "D2" -> node.getChildren(new String[] { "F2", "R2", "B2", "L2" });
+            case "B2" -> node.getChildren(new String[] { "U2", "R2", "D2", "L2" });
+            case "L2" -> node.getChildren(new String[] { "U2", "F2", "D2", "B2" });
+            default -> node.getChildren(new String[] { "U2", "F2", "R2", "D2", "B2", "L2" });
         };
 
         for (Cube c : children) {
             Cube result = DFS_Group3(c, depth - 1);
-            if (result != null) return result;
+            if (result != null)
+                return result;
         }
-        if (cubePath.size() != 0) cubePath.remove(cubePath.size() - 1);
+        if (cubePath.size() != 0)
+            cubePath.remove(cubePath.size() - 1);
         return null;
     }
 
@@ -319,7 +342,7 @@ public class Solver {
     // inputs must consist of 9 char strings
     static void enterCubeInfo() {
         cube = new Cube();
-        String[] faces = {"blue", "green", "yellow", "white", "orange", "red"};
+        String[] faces = { "blue", "green", "yellow", "white", "orange", "red" };
         for (String face : faces) {
             System.out.println("Input " + face + " face:");
             String input = scanner.nextLine();
