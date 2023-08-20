@@ -28,7 +28,12 @@ represents a scrambled cube and has a branching factor of 18.
 - Moves required for Group 3 = 6: L2 U2 L2 U2 B2 L2
 - Total moves required to solve cube = 3 + 8 + 6 + 6 = 23
 
-### Scramble 2: 
+### Scramble 2: U B U' R2 F2 R D R2 F U2 F2 U2 L2 D2 B L2 F' D2 B R
+- Moves required for Group 0 = 3: U D F
+- Moves required for Group 1 = 8: F2 R' U' D2 B2 R F2 L
+- Moves required for Group 2 = 8: U2 B2 R2 U' R2 U L2 D
+- Moves required for Group 3 = 10: U2 R2 U2 B2 D2 R2 B2 L2 F2 R2
+- Total moves required to solve cube = 3 + 8 + 8 + 10 = 29
 
 
 ## Known Issues
