@@ -128,12 +128,12 @@ public class Cube {
     }
 
     public boolean isSolved() {
-        return Arrays.equals(green, new char[] { 'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G' }) &&
-                Arrays.equals(blue, new char[] { 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B' }) &&
-                Arrays.equals(white, new char[] { 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W' }) &&
-                Arrays.equals(yellow, new char[] { 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y' }) &&
-                Arrays.equals(orange, new char[] { 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O' }) &&
-                Arrays.equals(red, new char[] { 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R' });
+        return Arrays.equals(green, new char[] { 'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G' })
+                && Arrays.equals(blue, new char[] { 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B' })
+                && Arrays.equals(white, new char[] { 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W' })
+                && Arrays.equals(yellow, new char[] { 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y' })
+                && Arrays.equals(orange, new char[] { 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O' })
+                && Arrays.equals(red, new char[] { 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R' });
     }
 
     // 4 is the max number of edges that can become oriented with one move
@@ -253,24 +253,24 @@ public class Cube {
         String[] moves = actions.split("\\s+");
         for (String move : moves) {
             switch (move) {
-                case "U" -> doU();
-                case "U'" -> doUPrime();
-                case "U2" -> doU2();
-                case "F" -> doF();
-                case "F'" -> doFPrime();
-                case "F2" -> doF2();
-                case "R" -> doR();
-                case "R'" -> doRPrime();
-                case "R2" -> doR2();
-                case "L" -> doL();
-                case "L'" -> doLPrime();
-                case "L2" -> doL2();
-                case "B" -> doB();
-                case "B'" -> doBPrime();
-                case "B2" -> doB2();
-                case "D" -> doD();
-                case "D'" -> doDPrime();
-                case "D2" -> doD2();
+            case "U" -> doU();
+            case "U'" -> doUPrime();
+            case "U2" -> doU2();
+            case "F" -> doF();
+            case "F'" -> doFPrime();
+            case "F2" -> doF2();
+            case "R" -> doR();
+            case "R'" -> doRPrime();
+            case "R2" -> doR2();
+            case "L" -> doL();
+            case "L'" -> doLPrime();
+            case "L2" -> doL2();
+            case "B" -> doB();
+            case "B'" -> doBPrime();
+            case "B2" -> doB2();
+            case "D" -> doD();
+            case "D'" -> doDPrime();
+            case "D2" -> doD2();
             }
         }
         // populateEdges();
@@ -319,11 +319,8 @@ public class Cube {
 
         char[] mainFaceNew;
 
-        mainFaceNew = new char[] {
-                mainFaceArr[6], mainFaceArr[3], mainFaceArr[0],
-                mainFaceArr[7], mainFaceArr[4], mainFaceArr[1],
-                mainFaceArr[8], mainFaceArr[5], mainFaceArr[2],
-        };
+        mainFaceNew = new char[] { mainFaceArr[6], mainFaceArr[3], mainFaceArr[0], mainFaceArr[7], mainFaceArr[4], mainFaceArr[1], mainFaceArr[8],
+                mainFaceArr[5], mainFaceArr[2], };
 
         char[] firstFace = new char[sideFaceArr0.length];
         System.arraycopy(sideFaceArr0, 0, firstFace, 0, firstFace.length);
@@ -346,12 +343,10 @@ public class Cube {
     }
 
     public Cube[] getChildren() {
-        String[] moves = { "U", "U'", "U2", "F", "F'", "F2", "R", "R'", "R2", "D", "D'", "D2", "B", "B'", "B2", "L",
-                "L'", "L2" };
+        String[] moves = { "U", "U'", "U2", "F", "F'", "F2", "R", "R'", "R2", "D", "D'", "D2", "B", "B'", "B2", "L", "L'", "L2" };
         Cube[] cubes = new Cube[18];
         for (int i = 0; i < moves.length; i++) {
-            Cube tempCube = new Cube(new char[][] { green, blue, white, yellow, orange, red }, depthLevel + 1,
-                    moves[i]);
+            Cube tempCube = new Cube(new char[][] { green, blue, white, yellow, orange, red }, depthLevel + 1, moves[i]);
             tempCube.scramble(moves[i]);
             cubes[i] = tempCube;
         }
@@ -361,8 +356,7 @@ public class Cube {
     public Cube[] getChildren(String[] children) {
         Cube[] cubes = new Cube[children.length];
         for (int i = 0; i < children.length; i++) {
-            Cube tempCube = new Cube(new char[][] { green, blue, white, yellow, orange, red }, depthLevel + 1,
-                    children[i]);
+            Cube tempCube = new Cube(new char[][] { green, blue, white, yellow, orange, red }, depthLevel + 1, children[i]);
             tempCube.scramble(children[i]);
             cubes[i] = tempCube;
         }
@@ -543,40 +537,40 @@ public class Cube {
 
     public void setFace(String face, char[] value) {
         switch (face) {
-            case "green" -> green = value;
-            case "blue" -> blue = value;
-            case "white" -> white = value;
-            case "yellow" -> yellow = value;
-            case "orange" -> orange = value;
-            case "red" -> red = value;
-            default -> System.out.println("not a valid face");
+        case "green" -> green = value;
+        case "blue" -> blue = value;
+        case "white" -> white = value;
+        case "yellow" -> yellow = value;
+        case "orange" -> orange = value;
+        case "red" -> red = value;
+        default -> System.out.println("not a valid face");
         }
     }
 
     public char[] getFace(String face) {
         switch (face) {
-            case "green" -> {
-                return green;
-            }
-            case "blue" -> {
-                return blue;
-            }
-            case "white" -> {
-                return white;
-            }
-            case "yellow" -> {
-                return yellow;
-            }
-            case "orange" -> {
-                return orange;
-            }
-            case "red" -> {
-                return red;
-            }
-            default -> {
-                System.out.println("not a valid face");
-                return null;
-            }
+        case "green" -> {
+            return green;
+        }
+        case "blue" -> {
+            return blue;
+        }
+        case "white" -> {
+            return white;
+        }
+        case "yellow" -> {
+            return yellow;
+        }
+        case "orange" -> {
+            return orange;
+        }
+        case "red" -> {
+            return red;
+        }
+        default -> {
+            System.out.println("not a valid face");
+            return null;
+        }
         }
     }
 
