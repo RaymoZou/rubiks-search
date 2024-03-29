@@ -1,5 +1,12 @@
-// 48 bytes for 48 stickers on the cube
-// 1 face looks like 0x 00 00 00 00 00 00 00 00 = 8 bytes = 64 bits
+enum colors {
+    W,
+    O,
+    G,
+    R,
+    B,
+    Y
+};
+
 struct Cube {
   unsigned char white_face[8];
   unsigned char orange_face[8];
