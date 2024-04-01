@@ -2,51 +2,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void print_color_name(unsigned char color) {
-  switch (color) {
-  case W:
-    printf("%c\n", 'W');
-    break;
-  case O:
-    printf("%c\n", 'O');
-    break;
-  case G:
-    printf("%c\n", 'G');
-    break;
-  case R:
-    printf("%c\n", 'R');
-    break;
-  case B:
-    printf("%c\n", 'B');
-    break;
-  case Y:
-    printf("%c\n", 'Y');
-    break;
-  }
-};
-
-// returns the color of the first sticker
-// index is a range from [0, 48]
-void get_color(const struct Cube *cube, int index) {
-  print_color_name(cube->white_face[index]);
-};
+// example scramble: R2 U2 R2 B D2 L2 R2 B2 F U2 F' D2 R' F' R2 D U' R' U B L
 
 int main() {
-  struct Cube *cube = malloc(sizeof(struct Cube));
-  cube->white_face[0] = G;
-  cube->white_face[1] = R;
-  cube->white_face[2] = O;
-  cube->white_face[3] = W;
-  cube->white_face[4] = B;
-  cube->white_face[5] = R;
-  cube->white_face[6] = Y;
-  cube->white_face[7] = W;
-  // TODO: function for printing a face
-  print_color_name(cube->white_face[0]);
-  print_color_name(cube->white_face[1]);
-  print_color_name(cube->white_face[2]);
-  print_color_name(cube->white_face[3]);
-  print_color_name(cube->white_face[4]);
+  unsigned char white[8] = {G, G, G, G, B, B, B, Y};
+  unsigned char orange[8] = {O, W, Y, B, O, B, W, B};
+  unsigned char green[8] = {O, R, R, Y, O, Y, R, R};
+  unsigned char red[8] = {G, Y, R, W, G, W, R, O};
+  unsigned char blue[8] = {W, Y, W, O, O, G, G, O};
+  unsigned char yellow[8] = {R, W, B, B, Y, W, R, Y};
+  struct Cube *cube = createCube(white, orange, green, red, blue, yellow);
+  print_cube(cube);
+  printf("\n");
+  turn(cube);
+  printf("\n");
+  print_cube(cube);
   free(cube);
   return 0;
 };
