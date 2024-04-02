@@ -58,20 +58,39 @@ void print_color_name(unsigned char color) {
 };
 
 // first 8 bytes are the main face
-// side faces are 3 bytes each
-// so 8 + 4(3) = 20 byte buffer
-// 
+// 3(4) = 12 stickers for side faces
 void turn(struct Cube *cube) {
-    unsigned char buffer[20];
-    memcpy(&buffer, &cube->white_face, 8);
-    cube->white_face[0] = buffer[5];
-    cube->white_face[1] = buffer[3];
-    cube->white_face[2] = buffer[0];
-    cube->white_face[3] = buffer[6];
-    cube->white_face[4] = buffer[1];
-    cube->white_face[5] = buffer[7];
-    cube->white_face[6] = buffer[4];
-    cube->white_face[7] = buffer[2];
+  unsigned char *buffer = malloc(sizeof(unsigned char) * 20);
+  memcpy(buffer, &cube->white_face, 8);      // copy main face
+  memcpy(buffer + 8, &cube->green_face, 3); // side face 1
+  memcpy(buffer + 11, &cube->orange_face, 3); // side face 2
+  memcpy(buffer + 14, &cube->blue_face, 3); // side face 3
+  memcpy(buffer + 17, &cube->red_face, 3); // side face 4
+  cube->white_face[0] = buffer[5];
+  cube->white_face[1] = buffer[3];
+  cube->white_face[2] = buffer[0];
+  cube->white_face[3] = buffer[6];
+  cube->white_face[4] = buffer[1];
+  cube->white_face[5] = buffer[7];
+  cube->white_face[6] = buffer[4];
+  cube->white_face[7] = buffer[2];
+
+  cube->orange_face[0] = buffer[8];
+  cube->orange_face[1] = buffer[9];
+  cube->orange_face[2] = buffer[10];
+
+  cube->blue_face[0] = buffer[11];
+  cube->blue_face[1] = buffer[12];
+  cube->blue_face[2] = buffer[13];
+
+  cube->red_face[0] = buffer[14];
+  cube->red_face[1] = buffer[15];
+  cube->red_face[2] = buffer[16];
+
+  cube->green_face[0] = buffer[17];
+  cube->green_face[1] = buffer[18];
+  cube->green_face[2] = buffer[19];
+  free(buffer);
 };
 
 void print_cube(struct Cube *cube) {
