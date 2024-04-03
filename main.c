@@ -1,10 +1,15 @@
 #include "cube.c"
+#include <SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 // example scramble: R2 U2 R2 B D2 L2 R2 B2 F U2 F' D2 R' F' R2 D U' R' U B L
 
-int main() {
+int main(int argc, char **argv) {
+
+  // initiate SDL library
+  SDL_Init(SDL_INIT_VIDEO);
+
   unsigned char white[8] = {G, G, G, G, B, B, B, Y};
   unsigned char orange[8] = {O, W, Y, B, O, B, W, B};
   unsigned char green[8] = {O, R, R, Y, O, Y, R, R};
@@ -14,7 +19,7 @@ int main() {
   struct Cube *cube = createCube(white, orange, green, red, blue, yellow);
   print_cube(cube);
   printf("\n");
-  turn(cube);
+  turn(cube); // TODO: render a GUI image of the cube after each turn
   printf("\n");
   print_cube(cube);
   free(cube);
