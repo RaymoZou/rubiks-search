@@ -2,13 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-// WHITE = 0
+// WHITE = 0x00
 // ORANGE = 1
 // GREEN = 2
 // RED = 3
 // BLUE = 4
 // YELLOW = 5
-enum colors { W, O, G, R, B, Y };
+enum colors { W = 0x00, O = 0x01, G = 0x02, R = 0x03, B = 0x04, Y = 0x05 };
 
 // TODO: replace this with just an array of 48 chars?
 struct Cube {
@@ -19,6 +19,7 @@ struct Cube {
   unsigned char blue_face[8];
   unsigned char yellow_face[8];
 };
+
 
 // each array has 8 elements
 struct Cube *createCube(unsigned char white[8], unsigned char orange[8],
@@ -61,11 +62,11 @@ void print_color_name(unsigned char color) {
 // 3(4) = 12 stickers for side faces
 void turn(struct Cube *cube) {
   unsigned char *buffer = malloc(sizeof(unsigned char) * 20);
-  memcpy(buffer, &cube->white_face, 8);      // copy main face
-  memcpy(buffer + 8, &cube->green_face, 3); // side face 1
+  memcpy(buffer, &cube->white_face, 8);       // copy main face
+  memcpy(buffer + 8, &cube->green_face, 3);   // side face 1
   memcpy(buffer + 11, &cube->orange_face, 3); // side face 2
-  memcpy(buffer + 14, &cube->blue_face, 3); // side face 3
-  memcpy(buffer + 17, &cube->red_face, 3); // side face 4
+  memcpy(buffer + 14, &cube->blue_face, 3);   // side face 3
+  memcpy(buffer + 17, &cube->red_face, 3);    // side face 4
   cube->white_face[0] = buffer[5];
   cube->white_face[1] = buffer[3];
   cube->white_face[2] = buffer[0];
