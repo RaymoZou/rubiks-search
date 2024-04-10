@@ -12,19 +12,19 @@ enum colors { W = 0x00, O = 0x01, G = 0x02, R = 0x03, B = 0x04, Y = 0x05 };
 
 // TODO: replace this with just an array of 48 chars?
 struct Cube {
-  unsigned char white_face[8];
-  unsigned char orange_face[8];
-  unsigned char green_face[8];
-  unsigned char red_face[8];
-  unsigned char blue_face[8];
-  unsigned char yellow_face[8];
+  char white_face[8];
+  char orange_face[8];
+  char green_face[8];
+  char red_face[8];
+  char blue_face[8];
+  char yellow_face[8];
 };
 
 
 // each array has 8 elements
-struct Cube *createCube(unsigned char white[8], unsigned char orange[8],
-                        unsigned char green[8], unsigned char red[8],
-                        unsigned char blue[8], unsigned char yellow[8]) {
+struct Cube *createCube(char white[8], char orange[8],
+                        char green[8], char red[8],
+                        char blue[8], char yellow[8]) {
   struct Cube *cube = malloc(sizeof(struct Cube));
   memcpy(&cube->white_face, white, 8);
   memcpy(&cube->orange_face, orange, 8);
