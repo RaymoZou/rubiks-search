@@ -20,11 +20,9 @@ struct Cube {
   char yellow_face[8];
 };
 
-
 // each array has 8 elements
-struct Cube *createCube(char white[8], char orange[8],
-                        char green[8], char red[8],
-                        char blue[8], char yellow[8]) {
+struct Cube *createCube(char white[8], char orange[8], char green[8],
+                        char red[8], char blue[8], char yellow[8]) {
   struct Cube *cube = malloc(sizeof(struct Cube));
   memcpy(&cube->white_face, white, 8);
   memcpy(&cube->orange_face, orange, 8);
