@@ -1,2 +1,2 @@
 main:
-	gcc main.c -o main.exe
+	g++ main.cpp cube.cpp -o main.exe -lSDL2
