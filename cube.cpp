@@ -40,12 +40,15 @@ void Cube::print_color_name(char color) {
 // first 8 bytes are the main face
 // 3(4) = 12 stickers for side faces
 void Cube::turn() {
-  char *buffer = (char *)malloc(sizeof(char) * 20);
+  // this is used to hold the current layer being turned
+  char buffer[20];
   memcpy(buffer, white_face, 8);       // copy main face
   memcpy(buffer + 8, green_face, 3);   // side face 1
   memcpy(buffer + 11, orange_face, 3); // side face 2
   memcpy(buffer + 14, blue_face, 3);   // side face 3
   memcpy(buffer + 17, red_face, 3);    // side face 4
+
+  // do the swaps
   white_face[0] = buffer[5];
   white_face[1] = buffer[3];
   white_face[2] = buffer[0];
@@ -70,7 +73,6 @@ void Cube::turn() {
   green_face[0] = buffer[17];
   green_face[1] = buffer[18];
   green_face[2] = buffer[19];
-  free(buffer);
 };
 
 void Cube::print_cube() {
