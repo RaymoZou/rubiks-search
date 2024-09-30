@@ -19,7 +19,9 @@ public:
   void print_color_name(char color);
 
  // quarter turn of the cube
-  void turn();
+  void turn(char *main_face, 
+		char *side_face_one, char *side_face_two, char *side_face_three, 
+		char *side_face_four);
 
   // prints the entire face
   void print_cube();

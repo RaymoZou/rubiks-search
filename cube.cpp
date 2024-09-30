@@ -36,43 +36,47 @@ void Cube::print_color_name(char color) {
   }
 };
 
+// generalized turn method that takes in a mainface and 4 side faces to be
+// turned CLOCKWISE
 // TODO: currently defauts to a U turn - generalize for all possible turns
 // first 8 bytes are the main face
 // 3(4) = 12 stickers for side faces
-void Cube::turn() {
+void Cube::turn(char *main_face, 
+		char *side_face_one, char *side_face_two, char *side_face_three, 
+		char *side_face_four) {
   // this is used to hold the current layer being turned
   char buffer[20];
-  memcpy(buffer, white_face, 8);       // copy main face
-  memcpy(buffer + 8, green_face, 3);   // side face 1
-  memcpy(buffer + 11, orange_face, 3); // side face 2
-  memcpy(buffer + 14, blue_face, 3);   // side face 3
-  memcpy(buffer + 17, red_face, 3);    // side face 4
+  memcpy(buffer, main_face, 8);       // main face
+  memcpy(buffer + 8, side_face_one, 3);   // side face 1
+  memcpy(buffer + 11, side_face_two, 3); // side face 2
+  memcpy(buffer + 14, side_face_three, 3);   // side face 3
+  memcpy(buffer + 17, side_face_four, 3);    // side face 4
 
   // do the swaps
-  white_face[0] = buffer[5];
-  white_face[1] = buffer[3];
-  white_face[2] = buffer[0];
-  white_face[3] = buffer[6];
-  white_face[4] = buffer[1];
-  white_face[5] = buffer[7];
-  white_face[6] = buffer[4];
-  white_face[7] = buffer[2];
+  main_face[0] = buffer[5];
+  main_face[1] = buffer[3];
+  main_face[2] = buffer[0];
+  main_face[3] = buffer[6];
+  main_face[4] = buffer[1];
+  main_face[5] = buffer[7];
+  main_face[6] = buffer[4];
+  main_face[7] = buffer[2];
 
-  orange_face[0] = buffer[8];
-  orange_face[1] = buffer[9];
-  orange_face[2] = buffer[10];
+  side_face_one[0] = buffer[8];
+  side_face_one[1] = buffer[9];
+  side_face_one[2] = buffer[10];
 
-  blue_face[0] = buffer[11];
-  blue_face[1] = buffer[12];
-  blue_face[2] = buffer[13];
+  side_face_two[0] = buffer[11];
+  side_face_two[1] = buffer[12];
+  side_face_two[2] = buffer[13];
 
-  red_face[0] = buffer[14];
-  red_face[1] = buffer[15];
-  red_face[2] = buffer[16];
+  side_face_three[0] = buffer[14];
+  side_face_three[1] = buffer[15];
+  side_face_three[2] = buffer[16];
 
-  green_face[0] = buffer[17];
-  green_face[1] = buffer[18];
-  green_face[2] = buffer[19];
+  side_face_four[0] = buffer[17];
+  side_face_four[1] = buffer[18];
+  side_face_four[2] = buffer[19];
 };
 
 void Cube::print_cube() {
