@@ -8,7 +8,7 @@
 int main(int argc, char **argv) {
 
   // initiate SDL library
-  SDL_Init(SDL_INIT_VIDEO);
+  /* SDL_Init(SDL_INIT_VIDEO); */
 
   char white[8] = {G, G, G, G, B, B, B, Y};
   char orange[8] = {O, W, Y, B, O, B, W, B};
@@ -16,13 +16,14 @@ int main(int argc, char **argv) {
   char red[8] = {G, Y, R, W, G, W, R, O};
   char blue[8] = {W, Y, W, O, O, G, G, O};
   char yellow[8] = {R, W, B, B, Y, W, R, Y};
-  /* struct Cube *cube = createCube(white, orange, green, red, blue, yellow); */
+  /* Cube *cube = new Cube(white, orange, green, red, blue, yellow); */
   Cube *cube = new Cube(white, orange, green, red, blue, yellow);
   cube->print_cube();
   printf("\n");
-  cube->turn(); // TODO: render a GUI image of the cube after each turn
+  cube->turn(cube->white_face, cube->green_face, cube->orange_face, cube->blue_face,
+             red); // TODO: render a GUI image of the cube after each turn
   printf("\n");
   cube->print_cube();
-  free(cube);
+  delete cube;
   return 0;
 };
