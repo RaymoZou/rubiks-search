@@ -37,6 +37,23 @@ void Cube::print_color_name(char color) {
   }
 };
 
+// TODO: write test cases for these
+void Cube::doU() {
+  turn(white_face, green_face, orange_face, blue_face, red_face);
+};
+
+void Cube::doU2() {
+  turn(white_face, green_face, orange_face, blue_face, red_face);
+  turn(white_face, green_face, orange_face, blue_face, red_face);
+};
+
+// TODO: I'm not sure if this will have performance issues or not
+void Cube::doUPrime() {
+  turn(white_face, green_face, orange_face, blue_face, red_face);
+  turn(white_face, green_face, orange_face, blue_face, red_face);
+  turn(white_face, green_face, orange_face, blue_face, red_face);
+};
+
 void Cube::turn(char *main_face, char *side_face_one, char *side_face_two,
                 char *side_face_three, char *side_face_four) {
   // save the current state of the cube

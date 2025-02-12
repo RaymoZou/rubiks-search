@@ -18,13 +18,13 @@ public:
   void print_color_name(char color);
 
   // TODO: implement this with passing in different faces to turn()
-  void doU();
-  void doU2();
-  void doUPrime();
-  void doD();
-  void doD2();
-  void doDPrime();
-  void doR();
+  void doU(); // Quarter turn of the top face counter-clockwise
+  void doU2(); // Half turn of the top face
+  void doUPrime(); // Quarter turn of the top face clockwise
+  void doD(); // Quarter turn of the bottom face clockwise
+  void doD2(); // Half turn of the bottom face
+  void doDPrime(); // Quarter turn of the bottom face counter-clockwise
+  void doR(); // TODO: ...
   void doR2();
   void doRPrime();
   void doL();
